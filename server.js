@@ -4,11 +4,39 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+  DeleteObjectCommand,
+  HeadObjectCommand,
+  PutBucketCorsCommand
+} = require("@aws-sdk/client-s3");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
 const app = express();
 app.set("trust proxy", 1);
 
 const PORT = process.env.PORT || 3000;
+const MAX_UPLOAD_MB = Math.max(1, Number(process.env.MAX_UPLOAD_MB) || 1024);
+
+const BUCKET_NAME = process.env.BUCKET || "";
+const BUCKET_ENDPOINT = process.env.ENDPOINT || "";
+const BUCKET_REGION = process.env.REGION || "auto";
+const BUCKET_ACCESS_KEY = process.env.ACCESS_KEY_ID || "";
+const BUCKET_SECRET_KEY = process.env.SECRET_ACCESS_KEY || "";
+const BUCKET_READY = Boolean(
+  BUCKET_NAME && BUCKET_ENDPOINT && BUCKET_ACCESS_KEY && BUCKET_SECRET_KEY
+);
+
+const s3 = BUCKET_READY ? new S3Client({
+  region: BUCKET_REGION,
+  endpoint: BUCKET_ENDPOINT,
+  credentials: {
+    accessKeyId: BUCKET_ACCESS_KEY,
+    secretAccessKey: BUCKET_SECRET_KEY
+  }
+}) : null;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "change-me";
 const SESSION_SECRET = process.env.SESSION_SECRET || "change-this-secret";
 const STORAGE_ROOT = process.env.STORAGE_DIR || path.join(__dirname, "storage");
@@ -51,6 +79,28 @@ app.use(session({
   }
 }));
 
+async function ensureBucketCors() {
+  if (!BUCKET_READY) return;
+  try {
+    await s3.send(new PutBucketCorsCommand({
+      Bucket: BUCKET_NAME,
+      CORSConfiguration: {
+        CORSRules: [{
+          AllowedHeaders: ["*"],
+          AllowedMethods: ["GET", "HEAD", "PUT"],
+          AllowedOrigins: ["*"],
+          ExposeHeaders: ["ETag"],
+          MaxAgeSeconds: 3600
+        }]
+      }
+    }));
+    console.log("Bucket CORS 已就绪");
+  } catch (err) {
+    console.warn("Bucket CORS 自动配置未完成：", err?.message || err);
+  }
+}
+ensureBucketCors();
+
 function readDocs() {
   try { return JSON.parse(fs.readFileSync(DATA_FILE, "utf8")); }
   catch { return []; }
@@ -74,6 +124,10 @@ function writeSettings(settings) {
 }
 function clean(v, max=500) {
   return String(v || "").trim().slice(0, max);
+}
+
+function safeOriginalName(name) {
+  return path.basename(String(name || "file")).replace(/[\r\n"]/g, "_").slice(0, 240);
 }
 function adminOnly(req, res, next) {
   if (req.session?.isAdmin) return next();
@@ -102,7 +156,7 @@ const upload = multer({
       cb(null, Date.now() + "-" + crypto.randomBytes(4).toString("hex") + ext);
     }
   }),
-  limits: { fileSize: 100 * 1024 * 1024 },
+  limits: { fileSize: MAX_UPLOAD_MB * 1024 * 1024 },
   fileFilter: (_, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
     allowed.has(ext) ? cb(null, true) : cb(new Error("不支持该文件类型"));
@@ -504,7 +558,7 @@ const adminHtml = `<!doctype html>
         <div class="full">
           <label>选择文件</label>
           <input name="file" type="file" required>
-          <p class="notice">支持 PDF、Word、PPT、Excel、ZIP/RAR/7Z、TXT，单文件最大 100MB。</p>
+          <p class="notice">支持 PDF、Word、PPT、Excel、ZIP/RAR/7Z、TXT，单文件最大 ${MAX_UPLOAD_MB}MB。大文件直接上传到 Bucket，不经过网站服务器。</p>
         </div>
         <div class="full">
           <button class="btn">上传并发布</button>
@@ -654,24 +708,91 @@ document.getElementById("lo").onclick=async()=>{
 
 document.getElementById("uf").onsubmit=async e=>{
   e.preventDefault();
+
   const m=document.getElementById("um");
+  const form=e.target;
+  const fd=new FormData(form);
+  const file=fd.get("file");
+
+  if(!file || !file.name){
+    m.className="err";
+    m.textContent=" 请选择文件";
+    return;
+  }
+
   m.className="notice";
-  m.textContent=" 正在上传...";
+  m.textContent=" 正在准备上传...";
+
   try{
-    const r=await fetch("/api/admin/documents",{method:"POST",body:new FormData(e.target)});
-    const d=await r.json().catch(()=>({}));
-    if(r.ok){
+    const prep=await fetch("/api/admin/uploads/presign",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        filename:file.name,
+        size:file.size,
+        contentType:file.type||"application/octet-stream"
+      })
+    });
+
+    const p=await prep.json().catch(()=>({}));
+    if(!prep.ok){
+      m.className="err";
+      m.textContent=" "+(p.error||"无法准备上传");
+      return;
+    }
+
+    m.className="notice";
+    m.textContent=" 正在上传 0%";
+
+    await new Promise((resolve,reject)=>{
+      const xhr=new XMLHttpRequest();
+      xhr.open("PUT",p.uploadUrl,true);
+      if(file.type) xhr.setRequestHeader("Content-Type",file.type);
+
+      xhr.upload.onprogress=ev=>{
+        if(ev.lengthComputable){
+          const pct=Math.max(0,Math.min(100,Math.round(ev.loaded/ev.total*100)));
+          m.textContent=" 正在上传 "+pct+"%";
+        }
+      };
+
+      xhr.onload=()=>{
+        if(xhr.status>=200 && xhr.status<300) resolve();
+        else reject(new Error("Bucket 上传失败，HTTP "+xhr.status));
+      };
+      xhr.onerror=()=>reject(new Error("网络上传失败"));
+      xhr.send(file);
+    });
+
+    m.textContent=" 正在保存资料信息...";
+
+    const done=await fetch("/api/admin/uploads/complete",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        key:p.key,
+        title:fd.get("title"),
+        category:fd.get("category"),
+        description:fd.get("description"),
+        originalName:file.name,
+        type:(file.name.split(".").pop()||"FILE").toUpperCase(),
+        size:file.size
+      })
+    });
+
+    const d=await done.json().catch(()=>({}));
+    if(done.ok){
       m.className="ok";
       m.textContent=" 上传成功";
-      e.target.reset();
+      form.reset();
       load();
     }else{
       m.className="err";
-      m.textContent=" "+(d.error||"上传失败");
+      m.textContent=" "+(d.error||"保存失败");
     }
-  }catch{
+  }catch(err){
     m.className="err";
-    m.textContent=" 上传请求失败";
+    m.textContent=" "+(err?.message||"上传失败");
   }
 };
 
@@ -1023,6 +1144,105 @@ app.post("/api/admin/links",adminOnly,(req,res)=>{
   res.json({ok:true,document:doc});
 });
 
+
+app.post("/api/admin/uploads/presign",adminOnly,async(req,res)=>{
+  if(!BUCKET_READY){
+    return res.status(503).json({error:"Bucket 尚未连接完成"});
+  }
+
+  const filename=safeOriginalName(req.body.filename);
+  const size=Number(req.body.size||0);
+  const ext=path.extname(filename).toLowerCase();
+
+  if(!allowed.has(ext)){
+    return res.status(400).json({error:"不支持该文件类型"});
+  }
+
+  if(!Number.isFinite(size) || size<=0){
+    return res.status(400).json({error:"文件大小无效"});
+  }
+
+  if(size > MAX_UPLOAD_MB * 1024 * 1024){
+    return res.status(400).json({error:`单个文件不能超过${MAX_UPLOAD_MB}MB`});
+  }
+
+  const key=`uploads/${new Date().toISOString().slice(0,10)}/${Date.now()}-${crypto.randomBytes(8).toString("hex")}${ext}`;
+
+  try{
+    const command=new PutObjectCommand({
+      Bucket:BUCKET_NAME,
+      Key:key,
+      ContentType:clean(req.body.contentType,120)||"application/octet-stream"
+    });
+
+    const uploadUrl=await getSignedUrl(s3,command,{expiresIn:3600});
+    res.json({ok:true,key,uploadUrl});
+  }catch(err){
+    console.error("生成 Bucket 上传地址失败",err);
+    res.status(500).json({error:"无法生成上传地址"});
+  }
+});
+
+app.post("/api/admin/uploads/complete",adminOnly,async(req,res)=>{
+  if(!BUCKET_READY){
+    return res.status(503).json({error:"Bucket 尚未连接完成"});
+  }
+
+  const key=String(req.body.key||"").trim();
+  const originalName=safeOriginalName(req.body.originalName);
+  const title=clean(req.body.title,100)||originalName;
+  const category=clean(req.body.category,50)||"其他资料";
+  const description=clean(req.body.description,500);
+  const declaredSize=Number(req.body.size||0);
+
+  if(!key.startsWith("uploads/")){
+    return res.status(400).json({error:"文件标识无效"});
+  }
+
+  try{
+    const head=await s3.send(new HeadObjectCommand({
+      Bucket:BUCKET_NAME,
+      Key:key
+    }));
+
+    const actualSize=Number(head.ContentLength||0);
+    if(!actualSize){
+      return res.status(400).json({error:"Bucket 中未找到上传文件"});
+    }
+
+    if(declaredSize && actualSize!==declaredSize){
+      return res.status(400).json({error:"文件大小校验失败，请重新上传"});
+    }
+
+    const docs=readDocs();
+    const ext=path.extname(originalName).replace(".","").toUpperCase();
+
+    const doc={
+      id:crypto.randomUUID(),
+      kind:"file",
+      storage:"bucket",
+      objectKey:key,
+      title,
+      category,
+      description,
+      originalName,
+      type:ext||clean(req.body.type,20)||"FILE",
+      size:actualSize,
+      downloads:0,
+      visible:true,
+      pinned:false,
+      createdAt:new Date().toISOString()
+    };
+
+    docs.push(doc);
+    writeDocs(docs);
+    res.json({ok:true,document:doc});
+  }catch(err){
+    console.error("确认 Bucket 上传失败",err);
+    res.status(500).json({error:"确认上传失败，请稍后重试"});
+  }
+});
+
 app.post("/api/admin/documents",adminOnly,upload.single("file"),(req,res)=>{
   if(!req.file) return res.status(400).json({error:"请选择文档"});
 
@@ -1090,21 +1310,32 @@ app.patch("/api/admin/documents/:id",adminOnly,(req,res)=>{
   res.json({ok:true,document:d});
 });
 
-app.delete("/api/admin/documents/:id",adminOnly,(req,res)=>{
+app.delete("/api/admin/documents/:id",adminOnly,async(req,res)=>{
   const docs=readDocs();
   const i=docs.findIndex(x=>x.id===req.params.id);
 
   if(i<0) return res.status(404).json({error:"文档不存在"});
 
-  const [d]=docs.splice(i,1);
+  const d=docs[i];
 
-  if(d.kind!=="link" && d.storedName){
-    const f=path.join(UPLOAD_DIR,d.storedName);
-    try{
+  try{
+    if(d.kind==="link"){
+      // 外部链接没有实体文件
+    }else if(d.storage==="bucket" && d.objectKey && BUCKET_READY){
+      await s3.send(new DeleteObjectCommand({
+        Bucket:BUCKET_NAME,
+        Key:d.objectKey
+      }));
+    }else if(d.storedName){
+      const f=path.join(UPLOAD_DIR,d.storedName);
       if(fs.existsSync(f)) fs.unlinkSync(f);
-    }catch{}
+    }
+  }catch(err){
+    console.error("删除实体文件失败",err);
+    return res.status(500).json({error:"删除文件失败，请稍后重试"});
   }
 
+  docs.splice(i,1);
   writeDocs(docs);
   res.json({ok:true});
 });
@@ -1124,25 +1355,47 @@ app.get("/go/:id",(req,res)=>{
   res.redirect(url);
 });
 
-app.get("/download/:id",(req,res)=>{
+app.get("/download/:id",async(req,res)=>{
   const docs=readDocs();
-  const d=docs.find(x=>x.id===req.params.id&&x.visible!==false&&x.kind!=="link");
+  const d=docs.find(x=>x.id===req.params.id && x.visible!==false && x.kind!=="link");
 
   if(!d) return res.status(404).send("文件不存在");
 
-  const f=path.join(UPLOAD_DIR,d.storedName);
-  if(!fs.existsSync(f)) return res.status(404).send("文件已丢失");
+  try{
+    if(d.storage==="bucket" && d.objectKey){
+      if(!BUCKET_READY) return res.status(503).send("Bucket 尚未连接");
 
-  d.downloads=Number(d.downloads||0)+1;
-  writeDocs(docs);
+      const filename=safeOriginalName(d.originalName||d.title||"download");
+      const command=new GetObjectCommand({
+        Bucket:BUCKET_NAME,
+        Key:d.objectKey,
+        ResponseContentDisposition:`attachment; filename*=UTF-8''${encodeURIComponent(filename)}`
+      });
 
-  res.download(f,d.originalName);
+      const url=await getSignedUrl(s3,command,{expiresIn:900});
+
+      d.downloads=Number(d.downloads||0)+1;
+      writeDocs(docs);
+
+      return res.redirect(url);
+    }
+
+    const f=path.join(UPLOAD_DIR,d.storedName||"");
+    if(!d.storedName || !fs.existsSync(f)) return res.status(404).send("文件已丢失");
+
+    d.downloads=Number(d.downloads||0)+1;
+    writeDocs(docs);
+    return res.download(f,d.originalName);
+  }catch(err){
+    console.error("下载失败",err);
+    res.status(500).send("下载失败，请稍后重试");
+  }
 });
 
 app.use((err,req,res,next)=>{
   console.error(err);
   if(err?.code==="LIMIT_FILE_SIZE"){
-    return res.status(400).json({error:"单个文件不能超过100MB"});
+    return res.status(400).json({error:`单个文件不能超过${MAX_UPLOAD_MB}MB`});
   }
   res.status(400).json({error:err?.message||"操作失败"});
 });
