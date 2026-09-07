@@ -13,10 +13,29 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "change-me";
 const SESSION_SECRET = process.env.SESSION_SECRET || "change-this-secret";
 const STORAGE_ROOT = process.env.STORAGE_DIR || path.join(__dirname, "storage");
 const DATA_FILE = path.join(STORAGE_ROOT, "documents.json");
+const SETTINGS_FILE = path.join(STORAGE_ROOT, "site-settings.json");
 const UPLOAD_DIR = path.join(STORAGE_ROOT, "uploads");
 
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, "[]", "utf8");
+
+const DEFAULT_SETTINGS = {
+  announcement: {
+    enabled: true,
+    title: "置顶公告",
+    content: "欢迎使用人民邮电出版社工具包。"
+  },
+  submission: {
+    enabled: true,
+    title: "投稿邮箱",
+    email: "",
+    content: "投稿前请确认作品及资料完整，并按照要求发送至指定邮箱。"
+  }
+};
+
+if (!fs.existsSync(SETTINGS_FILE)) {
+  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2), "utf8");
+}
 
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: true }));
@@ -38,6 +57,20 @@ function readDocs() {
 }
 function writeDocs(docs) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(docs, null, 2), "utf8");
+}
+function readSettings() {
+  try {
+    const current = JSON.parse(fs.readFileSync(SETTINGS_FILE, "utf8"));
+    return {
+      announcement: { ...DEFAULT_SETTINGS.announcement, ...(current.announcement || {}) },
+      submission: { ...DEFAULT_SETTINGS.submission, ...(current.submission || {}) }
+    };
+  } catch {
+    return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+  }
+}
+function writeSettings(settings) {
+  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(settings, null, 2), "utf8");
 }
 function clean(v, max=500) {
   return String(v || "").trim().slice(0, max);
@@ -141,6 +174,41 @@ input:focus,textarea:focus,select:focus{
   grid-column:1/-1;padding:50px;text-align:center;color:var(--muted);
   background:#fff;border:1px dashed #d0d5dd;border-radius:18px
 }
+.notice-board{
+  margin:12px 0 18px;padding:18px 20px;border-radius:18px;
+  background:linear-gradient(135deg,rgba(255,248,225,.98),rgba(255,252,242,.98));
+  border:1px solid #f4d98a;box-shadow:0 14px 42px rgba(146,105,16,.08)
+}
+.notice-board .notice-title{
+  display:flex;align-items:center;gap:8px;margin:0 0 8px;
+  font-size:16px;font-weight:800;color:#7a5310
+}
+.notice-board .notice-content{
+  color:#6b5a35;line-height:1.75;font-size:14px;white-space:pre-wrap
+}
+.submission-box{
+  margin:0 0 22px;padding:20px;border-radius:18px;background:#fff;
+  border:1px solid var(--line);box-shadow:0 14px 42px rgba(16,24,40,.06);
+  display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center
+}
+.submission-box h3{margin:0 0 7px;font-size:17px}
+.submission-box p{margin:0;color:var(--muted);font-size:14px;line-height:1.7;white-space:pre-wrap}
+.email-link{
+  display:inline-flex;align-items:center;justify-content:center;min-width:190px;
+  padding:11px 15px;border-radius:12px;border:1px solid #c7c9ff;
+  background:#f7f7ff;color:#4548ce;font-weight:700;word-break:break-all
+}
+.settings-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px
+}
+.settings-card{
+  border:1px solid var(--line);border-radius:16px;padding:18px;background:#fbfcfe
+}
+.switch-row{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px
+}
+.switch-row input[type="checkbox"]{width:18px;height:18px}
+
 
 /* admin */
 .admin{width:min(1050px,calc(100% - 32px));margin:40px auto}
@@ -202,7 +270,9 @@ label{display:block;font-size:13px;color:#475467;margin-bottom:7px}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){
   .grid{grid-template-columns:1fr}
-  .tools,.form{grid-template-columns:1fr}
+  .tools,.form,.settings-grid{grid-template-columns:1fr}
+  .submission-box{grid-template-columns:1fr}
+  .email-link{width:100%}
   .full{grid-column:auto}
   .item{grid-template-columns:1fr}
   .actions{justify-content:flex-start}
@@ -215,13 +285,13 @@ const homeHtml = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI漫剧资料中心</title>
+<title>人民邮电出版社工具包</title>
 <style>${css}</style>
 </head>
 <body>
 <div class="wrap">
   <nav class="nav">
-    <div class="brand"><span class="logo">AI</span>AI漫剧资料中心</div>
+    <div class="brand"><span class="logo">AI</span>人民邮电出版社工具包</div>
     <a href="/admin.html" style="color:#667085;font-size:14px">管理员入口</a>
   </nav>
 
@@ -234,6 +304,19 @@ const homeHtml = `<!doctype html>
       <select id="cat"><option value="">全部分类</option></select>
     </div>
   </header>
+
+  <section id="announcementBox" class="notice-board hidden">
+    <div class="notice-title">📌 <span id="announcementTitle">置顶公告</span></div>
+    <div id="announcementContent" class="notice-content"></div>
+  </section>
+
+  <section id="submissionBox" class="submission-box hidden">
+    <div>
+      <h3 id="submissionTitle">投稿邮箱</h3>
+      <p id="submissionContent"></p>
+    </div>
+    <a id="submissionEmail" class="email-link" href="#"></a>
+  </section>
 
   <div class="row">
     <h2>资料与工具</h2>
@@ -266,6 +349,34 @@ function render(){
       '</article>').join("")
     : '<div class="empty">暂时还没有资料</div>';
 }
+
+fetch("/api/site-settings").then(r=>r.json()).then(s=>{
+  const a=s.announcement||{};
+  const ab=document.getElementById("announcementBox");
+  if(a.enabled && (a.title||a.content)){
+    document.getElementById("announcementTitle").textContent=a.title||"置顶公告";
+    document.getElementById("announcementContent").textContent=a.content||"";
+    ab.classList.remove("hidden");
+  }
+
+  const sub=s.submission||{};
+  const sb=document.getElementById("submissionBox");
+  if(sub.enabled && (sub.email||sub.content)){
+    document.getElementById("submissionTitle").textContent=sub.title||"投稿邮箱";
+    document.getElementById("submissionContent").textContent=sub.content||"";
+    const email=document.getElementById("submissionEmail");
+    if(sub.email){
+      email.textContent=sub.email;
+      email.href="mailto:"+encodeURIComponent(sub.email);
+      email.style.display="inline-flex";
+    }else{
+      email.textContent="邮箱暂未设置";
+      email.removeAttribute("href");
+    }
+    sb.classList.remove("hidden");
+  }
+}).catch(()=>{});
+
 fetch("/api/documents").then(r=>r.json()).then(x=>{
   docs=x;
   const cs=[...new Set(docs.map(d=>d.category).filter(Boolean))];
@@ -284,14 +395,14 @@ const adminHtml = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>资料管理后台</title>
+<title>人民邮电出版社工具包｜资料管理后台</title>
 <style>${css}</style>
 </head>
 <body>
 
 <div class="admin">
   <section id="login" class="panel login">
-    <div class="brand"><span class="logo">AI</span>资料中心后台</div>
+    <div class="brand"><span class="logo">AI</span>人民邮电出版社工具包后台</div>
     <h1>管理员登录</h1>
     <p class="notice">登录后可以上传、编辑、隐藏或删除资料。</p>
     <form id="lf">
@@ -312,6 +423,68 @@ const adminHtml = `<!doctype html>
         <button id="lo" class="mini">退出</button>
       </div>
     </div>
+
+    <section class="panel">
+      <div class="row" style="align-items:flex-start">
+        <div>
+          <h2 style="margin:0 0 5px">页面信息设置</h2>
+          <div class="notice">这里可以随时修改前台的置顶公告和投稿邮箱，不需要改代码。</div>
+        </div>
+      </div>
+
+      <div class="settings-grid" style="margin-top:18px">
+        <form id="announcementForm" class="settings-card">
+          <div class="switch-row">
+            <strong>置顶公告</strong>
+            <label style="margin:0;display:flex;align-items:center;gap:7px">
+              <input id="announcementEnabled" type="checkbox">
+              <span>前台显示</span>
+            </label>
+          </div>
+
+          <div style="margin-bottom:12px">
+            <label>公告标题</label>
+            <input id="announcementTitleInput" placeholder="例如：重要通知">
+          </div>
+
+          <div style="margin-bottom:12px">
+            <label>公告内容</label>
+            <textarea id="announcementContentInput" placeholder="填写需要长期置顶展示的公告内容"></textarea>
+          </div>
+
+          <button class="btn" type="submit">保存公告</button>
+          <span id="announcementMsg"></span>
+        </form>
+
+        <form id="submissionForm" class="settings-card">
+          <div class="switch-row">
+            <strong>投稿邮箱</strong>
+            <label style="margin:0;display:flex;align-items:center;gap:7px">
+              <input id="submissionEnabled" type="checkbox">
+              <span>前台显示</span>
+            </label>
+          </div>
+
+          <div style="margin-bottom:12px">
+            <label>板块标题</label>
+            <input id="submissionTitleInput" placeholder="投稿邮箱">
+          </div>
+
+          <div style="margin-bottom:12px">
+            <label>投稿邮箱地址</label>
+            <input id="submissionEmailInput" type="email" placeholder="example@email.com">
+          </div>
+
+          <div style="margin-bottom:12px">
+            <label>投稿说明</label>
+            <textarea id="submissionContentInput" placeholder="例如：投稿请注明作品名称、作者姓名及联系方式。"></textarea>
+          </div>
+
+          <button class="btn" type="submit">保存投稿信息</button>
+          <span id="submissionMsg"></span>
+        </form>
+      </div>
+    </section>
 
     <section class="panel">
       <h2>上传新资料</h2>
@@ -442,7 +615,10 @@ async function auth(){
   const d=await fetch("/api/me").then(r=>r.json());
   document.getElementById("login").classList.toggle("hidden",d.isAdmin);
   document.getElementById("main").classList.toggle("hidden",!d.isAdmin);
-  if(d.isAdmin) load();
+  if(d.isAdmin){
+    load();
+    loadSiteSettings();
+  }
 }
 
 document.getElementById("lf").onsubmit=async e=>{
@@ -499,6 +675,91 @@ document.getElementById("uf").onsubmit=async e=>{
   }
 };
 
+
+
+async function loadSiteSettings(){
+  try{
+    const r=await fetch("/api/admin/site-settings");
+    if(r.status===401) return auth();
+    const s=await r.json();
+
+    const a=s.announcement||{};
+    document.getElementById("announcementEnabled").checked=Boolean(a.enabled);
+    document.getElementById("announcementTitleInput").value=a.title||"置顶公告";
+    document.getElementById("announcementContentInput").value=a.content||"";
+
+    const sub=s.submission||{};
+    document.getElementById("submissionEnabled").checked=Boolean(sub.enabled);
+    document.getElementById("submissionTitleInput").value=sub.title||"投稿邮箱";
+    document.getElementById("submissionEmailInput").value=sub.email||"";
+    document.getElementById("submissionContentInput").value=sub.content||"";
+  }catch{}
+}
+
+document.getElementById("announcementForm").onsubmit=async e=>{
+  e.preventDefault();
+  const m=document.getElementById("announcementMsg");
+  m.className="notice";
+  m.textContent=" 正在保存...";
+
+  try{
+    const r=await fetch("/api/admin/site-settings",{
+      method:"PATCH",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        announcement:{
+          enabled:document.getElementById("announcementEnabled").checked,
+          title:document.getElementById("announcementTitleInput").value,
+          content:document.getElementById("announcementContentInput").value
+        }
+      })
+    });
+    const d=await r.json().catch(()=>({}));
+    if(r.ok){
+      m.className="ok";
+      m.textContent=" 保存成功";
+    }else{
+      m.className="err";
+      m.textContent=" "+(d.error||"保存失败");
+    }
+  }catch{
+    m.className="err";
+    m.textContent=" 保存请求失败";
+  }
+};
+
+document.getElementById("submissionForm").onsubmit=async e=>{
+  e.preventDefault();
+  const m=document.getElementById("submissionMsg");
+  m.className="notice";
+  m.textContent=" 正在保存...";
+
+  try{
+    const r=await fetch("/api/admin/site-settings",{
+      method:"PATCH",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        submission:{
+          enabled:document.getElementById("submissionEnabled").checked,
+          title:document.getElementById("submissionTitleInput").value,
+          email:document.getElementById("submissionEmailInput").value,
+          content:document.getElementById("submissionContentInput").value
+        }
+      })
+    });
+    const d=await r.json().catch(()=>({}));
+    if(r.ok){
+      m.className="ok";
+      m.textContent=" 保存成功";
+    }else{
+      m.className="err";
+      m.textContent=" "+(d.error||"保存失败");
+    }
+  }catch{
+    m.className="err";
+    m.textContent=" 保存请求失败";
+  }
+};
 
 document.getElementById("linkForm").onsubmit=async e=>{
   e.preventDefault();
@@ -674,6 +935,41 @@ app.post("/api/logout",(req,res)=>{
 
 app.get("/api/me",(req,res)=>{
   res.json({isAdmin:Boolean(req.session?.isAdmin)});
+});
+
+
+app.get("/api/site-settings",(req,res)=>{
+  const s=readSettings();
+  res.json({
+    announcement:s.announcement,
+    submission:s.submission
+  });
+});
+
+app.get("/api/admin/site-settings",adminOnly,(req,res)=>{
+  res.json(readSettings());
+});
+
+app.patch("/api/admin/site-settings",adminOnly,(req,res)=>{
+  const s=readSettings();
+
+  if(req.body.announcement){
+    const a=req.body.announcement;
+    if("enabled" in a) s.announcement.enabled=Boolean(a.enabled);
+    if("title" in a) s.announcement.title=clean(a.title,100)||"置顶公告";
+    if("content" in a) s.announcement.content=clean(a.content,2000);
+  }
+
+  if(req.body.submission){
+    const sub=req.body.submission;
+    if("enabled" in sub) s.submission.enabled=Boolean(sub.enabled);
+    if("title" in sub) s.submission.title=clean(sub.title,100)||"投稿邮箱";
+    if("email" in sub) s.submission.email=clean(sub.email,200);
+    if("content" in sub) s.submission.content=clean(sub.content,2000);
+  }
+
+  writeSettings(s);
+  res.json({ok:true,settings:s});
 });
 
 app.get("/api/documents",(req,res)=>{
