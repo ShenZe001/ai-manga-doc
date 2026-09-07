@@ -47,6 +47,15 @@ function adminOnly(req, res, next) {
   res.status(401).json({ error: "未登录或登录已过期" });
 }
 
+function validHttpUrl(value) {
+  try {
+    const u = new URL(String(value || "").trim());
+    return (u.protocol === "http:" || u.protocol === "https:") ? u.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 const allowed = new Set([
   ".pdf",".doc",".docx",".ppt",".pptx",
   ".xls",".xlsx",".zip",".rar",".7z",".txt"
@@ -219,7 +228,7 @@ const homeHtml = `<!doctype html>
   <header class="hero">
     <span class="tag">✦ 课程资料 · 模板 · 配套资源</span>
     <h1>把学习资料，集中在一个地方</h1>
-    <p>选择需要的文档，点击即可下载。支持 PDF、Word、PPT、Excel、压缩包等常用格式。</p>
+    <p>文件可以直接下载，工具或资源网址可以一键直达。支持 PDF、Word、PPT、Excel、压缩包及外部链接。</p>
     <div class="tools">
       <input id="q" placeholder="搜索文档名称或关键词">
       <select id="cat"><option value="">全部分类</option></select>
@@ -227,7 +236,7 @@ const homeHtml = `<!doctype html>
   </header>
 
   <div class="row">
-    <h2>资料下载</h2>
+    <h2>资料与工具</h2>
     <span id="count" class="notice"></span>
   </div>
   <main class="grid" id="grid"></main>
@@ -247,11 +256,13 @@ function render(){
   document.getElementById("count").textContent="共 "+arr.length+" 份资料";
   document.getElementById("grid").innerHTML=arr.length
     ? arr.map(d=>'<article class="card">'+
-      '<div class="row"><div class="file">'+E(d.type||"FILE")+'</div><div style="display:flex;gap:6px;align-items:center">'+(d.pinned?'<span class="badge" style="background:#fff3cd;color:#8a6116">置顶</span>':'')+'<span class="badge">'+E(d.category||"其他资料")+'</span></div></div>'+
+      '<div class="row"><div class="file">'+(d.kind==="link"?"LINK":E(d.type||"FILE"))+'</div><div style="display:flex;gap:6px;align-items:center">'+(d.pinned?'<span class="badge" style="background:#fff3cd;color:#8a6116">置顶</span>':'')+(d.kind==="link"?'<span class="badge" style="background:#eef4ff;color:#3538cd">直达链接</span>':'')+'<span class="badge">'+E(d.category||"其他资料")+'</span></div></div>'+
       '<h3>'+E(d.title)+'</h3>'+
       '<div class="desc">'+E(d.description||"课程配套学习资料")+'</div>'+
-      '<div class="meta">下载 '+Number(d.downloads||0)+' 次 · '+sz(d.size)+'</div>'+
-      '<a class="btn" href="/download/'+encodeURIComponent(d.id)+'">立即下载</a>'+
+      '<div class="meta">'+(d.kind==="link"?"访问 ":"下载 ")+Number(d.downloads||0)+' 次'+(d.kind==="link"?" · 外部链接":" · "+sz(d.size))+'</div>'+
+      (d.kind==="link"
+        ? '<a class="btn" target="_blank" rel="noopener noreferrer" href="/go/'+encodeURIComponent(d.id)+'">立即前往</a>'
+        : '<a class="btn" href="/download/'+encodeURIComponent(d.id)+'">立即下载</a>')+
       '</article>').join("")
     : '<div class="empty">暂时还没有资料</div>';
 }
@@ -294,7 +305,7 @@ const adminHtml = `<!doctype html>
     <div class="row" style="margin-bottom:18px">
       <div>
         <h1 style="margin:0">资料管理</h1>
-        <p class="notice">资料上传后前台自动出现；已上传资料可以直接修改名称、分类和简介，无需重新上传文件。</p>
+        <p class="notice">文件和直达链接发布后都会自动出现在前台；名称、分类、简介和链接地址都可以随时修改。</p>
       </div>
       <div class="actions">
         <a class="mini" href="/" target="_blank">查看前台</a>
@@ -325,6 +336,40 @@ const adminHtml = `<!doctype html>
         <div class="full">
           <button class="btn">上传并发布</button>
           <span id="um"></span>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="row" style="align-items:flex-start">
+        <div>
+          <h2 style="margin:0 0 5px">添加直达链接</h2>
+          <div class="notice">适合放生视频、生图、工具平台、教程页等网址。访客点击后直接跳转。</div>
+        </div>
+        <span class="badge" style="background:#eef4ff;color:#3538cd">LINK</span>
+      </div>
+
+      <form id="linkForm" class="form" style="margin-top:18px">
+        <div>
+          <label>链接名称</label>
+          <input name="title" placeholder="例如：AI生视频工具" required>
+        </div>
+        <div>
+          <label>分类</label>
+          <input name="category" placeholder="例如：生视频工具" required>
+        </div>
+        <div class="full">
+          <label>简介</label>
+          <textarea name="description" placeholder="例如：点击进入在线AI视频生成平台"></textarea>
+        </div>
+        <div class="full">
+          <label>直达网址</label>
+          <input name="url" type="url" placeholder="https://..." required>
+          <p class="notice">请填写完整网址，必须以 http:// 或 https:// 开头。</p>
+        </div>
+        <div class="full">
+          <button class="btn" type="submit">发布直达链接</button>
+          <span id="linkMsg"></span>
         </div>
       </form>
     </section>
@@ -367,10 +412,16 @@ const adminHtml = `<!doctype html>
         <textarea id="editDescription" placeholder="修改这份资料的简介"></textarea>
       </div>
 
-      <div style="margin-bottom:14px">
+      <div id="editFileBlock" style="margin-bottom:14px">
         <label>当前文件</label>
         <div id="editFileName" class="file-lock"></div>
         <div class="notice" style="margin-top:7px">这里只修改资料信息，原文件保持不变，不需要重新上传。</div>
+      </div>
+
+      <div id="editLinkBlock" class="hidden" style="margin-bottom:14px">
+        <label>直达网址</label>
+        <input id="editUrl" type="url" placeholder="https://...">
+        <div class="notice" style="margin-top:7px">可以直接修改网址，不需要重新发布这条资料。</div>
       </div>
 
       <div id="editMsg"></div>
@@ -448,6 +499,44 @@ document.getElementById("uf").onsubmit=async e=>{
   }
 };
 
+
+document.getElementById("linkForm").onsubmit=async e=>{
+  e.preventDefault();
+  const m=document.getElementById("linkMsg");
+  m.className="notice";
+  m.textContent=" 正在发布...";
+
+  const form=new FormData(e.target);
+  const payload={
+    title:form.get("title"),
+    category:form.get("category"),
+    description:form.get("description"),
+    url:form.get("url")
+  };
+
+  try{
+    const r=await fetch("/api/admin/links",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(payload)
+    });
+    const d=await r.json().catch(()=>({}));
+
+    if(r.ok){
+      m.className="ok";
+      m.textContent=" 发布成功";
+      e.target.reset();
+      load();
+    }else{
+      m.className="err";
+      m.textContent=" "+(d.error||"发布失败");
+    }
+  }catch{
+    m.className="err";
+    m.textContent=" 发布请求失败";
+  }
+};
+
 async function load(){
   const r=await fetch("/api/admin/documents");
   if(r.status===401) return auth();
@@ -459,7 +548,7 @@ async function load(){
       '<div class="item">'+
         '<div>'+
           '<h3>'+E(d.title)+(d.pinned?' <span class="badge" style="background:#fff3cd;color:#8a6116">已置顶</span>':'')+(d.visible===false?' <span class="badge">已隐藏</span>':'')+'</h3>'+
-          '<p>'+E(d.category)+' · '+E(d.type||"FILE")+' · 下载 '+Number(d.downloads||0)+' 次</p>'+
+          '<p>'+E(d.category)+' · '+(d.kind==="link"?"直达链接":E(d.type||"FILE"))+' · '+(d.kind==="link"?"访问 ":"下载 ")+Number(d.downloads||0)+' 次</p>'+
           '<div class="admin-desc">'+E(d.description||"暂无简介")+'</div>'+
         '</div>'+
         '<div class="actions">'+
@@ -481,7 +570,13 @@ window.openEdit=id=>{
   document.getElementById("editTitle").value=d.title||"";
   document.getElementById("editCategory").value=d.category||"";
   document.getElementById("editDescription").value=d.description||"";
+
+  const isLink=d.kind==="link";
+  document.getElementById("editFileBlock").classList.toggle("hidden",isLink);
+  document.getElementById("editLinkBlock").classList.toggle("hidden",!isLink);
   document.getElementById("editFileName").textContent=d.originalName||"原文件";
+  document.getElementById("editUrl").value=isLink?(d.url||""):"";
+
   document.getElementById("editMsg").textContent="";
   document.getElementById("editMask").classList.remove("hidden");
 };
@@ -510,7 +605,10 @@ document.getElementById("editForm").onsubmit=async e=>{
       body:JSON.stringify({
         title:document.getElementById("editTitle").value,
         category:document.getElementById("editCategory").value,
-        description:document.getElementById("editDescription").value
+        description:document.getElementById("editDescription").value,
+        url:document.getElementById("editLinkBlock").classList.contains("hidden")
+          ? undefined
+          : document.getElementById("editUrl").value
       })
     });
 
@@ -599,6 +697,36 @@ app.get("/api/admin/documents",adminOnly,(req,res)=>{
   );
 });
 
+app.post("/api/admin/links",adminOnly,(req,res)=>{
+  const title=clean(req.body.title,100);
+  const category=clean(req.body.category,50)||"工具链接";
+  const description=clean(req.body.description,500);
+  const url=validHttpUrl(req.body.url);
+
+  if(!title) return res.status(400).json({error:"链接名称不能为空"});
+  if(!url) return res.status(400).json({error:"网址格式不正确，请填写以 http:// 或 https:// 开头的完整网址"});
+
+  const docs=readDocs();
+  const doc={
+    id:crypto.randomUUID(),
+    kind:"link",
+    title,
+    category,
+    description,
+    url,
+    type:"LINK",
+    size:0,
+    downloads:0,
+    visible:true,
+    pinned:false,
+    createdAt:new Date().toISOString()
+  };
+
+  docs.push(doc);
+  writeDocs(docs);
+  res.json({ok:true,document:doc});
+});
+
 app.post("/api/admin/documents",adminOnly,upload.single("file"),(req,res)=>{
   if(!req.file) return res.status(400).json({error:"请选择文档"});
 
@@ -607,6 +735,7 @@ app.post("/api/admin/documents",adminOnly,upload.single("file"),(req,res)=>{
 
   const doc={
     id:crypto.randomUUID(),
+    kind:"file",
     title:clean(req.body.title,100)||req.file.originalname,
     category:clean(req.body.category,50)||"其他资料",
     description:clean(req.body.description,500),
@@ -653,6 +782,12 @@ app.patch("/api/admin/documents/:id",adminOnly,(req,res)=>{
     d.pinned=Boolean(req.body.pinned);
   }
 
+  if("url" in req.body && d.kind==="link") {
+    const url=validHttpUrl(req.body.url);
+    if(!url) return res.status(400).json({error:"网址格式不正确，请填写完整的 http:// 或 https:// 地址"});
+    d.url=url;
+  }
+
   d.updatedAt=new Date().toISOString();
   writeDocs(docs);
 
@@ -666,19 +801,36 @@ app.delete("/api/admin/documents/:id",adminOnly,(req,res)=>{
   if(i<0) return res.status(404).json({error:"文档不存在"});
 
   const [d]=docs.splice(i,1);
-  const f=path.join(UPLOAD_DIR,d.storedName);
 
-  try{
-    if(fs.existsSync(f)) fs.unlinkSync(f);
-  }catch{}
+  if(d.kind!=="link" && d.storedName){
+    const f=path.join(UPLOAD_DIR,d.storedName);
+    try{
+      if(fs.existsSync(f)) fs.unlinkSync(f);
+    }catch{}
+  }
 
   writeDocs(docs);
   res.json({ok:true});
 });
 
+app.get("/go/:id",(req,res)=>{
+  const docs=readDocs();
+  const d=docs.find(x=>x.id===req.params.id && x.visible!==false && x.kind==="link");
+
+  if(!d) return res.status(404).send("链接不存在");
+
+  const url=validHttpUrl(d.url);
+  if(!url) return res.status(400).send("链接地址无效");
+
+  d.downloads=Number(d.downloads||0)+1;
+  writeDocs(docs);
+
+  res.redirect(url);
+});
+
 app.get("/download/:id",(req,res)=>{
   const docs=readDocs();
-  const d=docs.find(x=>x.id===req.params.id&&x.visible!==false);
+  const d=docs.find(x=>x.id===req.params.id&&x.visible!==false&&x.kind!=="link");
 
   if(!d) return res.status(404).send("文件不存在");
 
