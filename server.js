@@ -6,6 +6,7 @@ const fs = require("fs");
 const crypto = require("crypto");
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "change-me";
 const SESSION_SECRET = process.env.SESSION_SECRET || "change-this-secret";
@@ -96,7 +97,7 @@ const adminHtml = `<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"
 <script>
 const E=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 async function auth(){const d=await fetch("/api/me").then(r=>r.json());document.getElementById("login").classList.toggle("hidden",d.isAdmin);document.getElementById("main").classList.toggle("hidden",!d.isAdmin);if(d.isAdmin)load()}
-document.getElementById("lf").onsubmit=async e=>{e.preventDefault();const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:document.getElementById("pw").value})});const d=await r.json();if(r.ok){document.getElementById("lm").textContent="";auth()}else{document.getElementById("lm").className="err";document.getElementById("lm").textContent=d.error||"登录失败"}};
+document.getElementById("lf").onsubmit=async e=>{e.preventDefault();const m=document.getElementById("lm");m.className="notice";m.textContent="正在登录...";try{const r=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:document.getElementById("pw").value})});const d=await r.json();if(r.ok){m.className="ok";m.textContent="登录成功";await auth()}else{m.className="err";m.textContent=d.error||"登录失败"}}catch(err){m.className="err";m.textContent="登录请求失败，请刷新页面后重试"}};
 document.getElementById("lo").onclick=async()=>{await fetch("/api/logout",{method:"POST"});auth()};
 document.getElementById("uf").onsubmit=async e=>{e.preventDefault();const m=document.getElementById("um");m.className="notice";m.textContent=" 正在上传...";const r=await fetch("/api/admin/documents",{method:"POST",body:new FormData(e.target)});const d=await r.json().catch(()=>({}));if(r.ok){m.className="ok";m.textContent=" 上传成功";e.target.reset();load()}else{m.className="err";m.textContent=" "+(d.error||"上传失败")}};
 async function load(){const r=await fetch("/api/admin/documents");if(r.status===401)return auth();const ds=await r.json();document.getElementById("ct").textContent="共 "+ds.length+" 份";document.getElementById("list").innerHTML=ds.length?ds.map(d=>'<div class="item"><div><h3>'+E(d.title)+(d.visible===false?' <span class="badge">已隐藏</span>':'')+'</h3><p>'+E(d.category)+' · 下载 '+Number(d.downloads||0)+' 次</p></div><div class="actions"><button class="mini" onclick="editD(\\''+d.id+'\\')">编辑</button><button class="mini" onclick="visD(\\''+d.id+'\\','+(d.visible!==false)+')">'+(d.visible===false?'显示':'隐藏')+'</button><button class="mini danger" onclick="delD(\\''+d.id+'\\')">删除</button></div></div>').join(""):'<p class="notice">还没有上传资料。</p>'}
