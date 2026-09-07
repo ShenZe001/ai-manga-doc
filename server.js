@@ -247,7 +247,7 @@ function render(){
   document.getElementById("count").textContent="共 "+arr.length+" 份资料";
   document.getElementById("grid").innerHTML=arr.length
     ? arr.map(d=>'<article class="card">'+
-      '<div class="row"><div class="file">'+E(d.type||"FILE")+'</div><span class="badge">'+E(d.category||"其他资料")+'</span></div>'+
+      '<div class="row"><div class="file">'+E(d.type||"FILE")+'</div><div style="display:flex;gap:6px;align-items:center">'+(d.pinned?'<span class="badge" style="background:#fff3cd;color:#8a6116">置顶</span>':'')+'<span class="badge">'+E(d.category||"其他资料")+'</span></div></div>'+
       '<h3>'+E(d.title)+'</h3>'+
       '<div class="desc">'+E(d.description||"课程配套学习资料")+'</div>'+
       '<div class="meta">下载 '+Number(d.downloads||0)+' 次 · '+sz(d.size)+'</div>'+
@@ -458,11 +458,12 @@ async function load(){
     ? adminDocs.map(d=>
       '<div class="item">'+
         '<div>'+
-          '<h3>'+E(d.title)+(d.visible===false?' <span class="badge">已隐藏</span>':'')+'</h3>'+
+          '<h3>'+E(d.title)+(d.pinned?' <span class="badge" style="background:#fff3cd;color:#8a6116">已置顶</span>':'')+(d.visible===false?' <span class="badge">已隐藏</span>':'')+'</h3>'+
           '<p>'+E(d.category)+' · '+E(d.type||"FILE")+' · 下载 '+Number(d.downloads||0)+' 次</p>'+
           '<div class="admin-desc">'+E(d.description||"暂无简介")+'</div>'+
         '</div>'+
         '<div class="actions">'+
+          '<button class="mini" onclick="pinD(\\''+d.id+'\\','+Boolean(d.pinned)+')">'+(d.pinned?'取消置顶':'置顶')+'</button>'+
           '<button class="mini primary" onclick="openEdit(\\''+d.id+'\\')">编辑资料</button>'+
           '<button class="mini" onclick="visD(\\''+d.id+'\\','+(d.visible!==false)+')">'+(d.visible===false?'显示':'隐藏')+'</button>'+
           '<button class="mini danger" onclick="delD(\\''+d.id+'\\')">删除</button>'+
@@ -529,6 +530,15 @@ document.getElementById("editForm").onsubmit=async e=>{
   }
 };
 
+window.pinD=async(id,pinned)=>{
+  await fetch("/api/admin/documents/"+encodeURIComponent(id),{
+    method:"PATCH",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({pinned:!pinned})
+  });
+  load();
+};
+
 window.visD=async(id,v)=>{
   await fetch("/api/admin/documents/"+encodeURIComponent(id),{
     method:"PATCH",
@@ -571,13 +581,21 @@ app.get("/api/me",(req,res)=>{
 app.get("/api/documents",(req,res)=>{
   const docs=readDocs()
     .filter(d=>d.visible!==false)
-    .sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""));
+    .sort((a,b)=>{
+      const pinDiff=Number(Boolean(b.pinned))-Number(Boolean(a.pinned));
+      if(pinDiff!==0) return pinDiff;
+      return (b.createdAt||"").localeCompare(a.createdAt||"");
+    });
   res.json(docs);
 });
 
 app.get("/api/admin/documents",adminOnly,(req,res)=>{
   res.json(
-    readDocs().sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||""))
+    readDocs().sort((a,b)=>{
+      const pinDiff=Number(Boolean(b.pinned))-Number(Boolean(a.pinned));
+      if(pinDiff!==0) return pinDiff;
+      return (b.createdAt||"").localeCompare(a.createdAt||"");
+    })
   );
 });
 
@@ -598,6 +616,7 @@ app.post("/api/admin/documents",adminOnly,upload.single("file"),(req,res)=>{
     size:req.file.size,
     downloads:0,
     visible:true,
+    pinned:false,
     createdAt:new Date().toISOString()
   };
 
@@ -628,6 +647,10 @@ app.patch("/api/admin/documents/:id",adminOnly,(req,res)=>{
 
   if("visible" in req.body) {
     d.visible=Boolean(req.body.visible);
+  }
+
+  if("pinned" in req.body) {
+    d.pinned=Boolean(req.body.pinned);
   }
 
   d.updatedAt=new Date().toISOString();
