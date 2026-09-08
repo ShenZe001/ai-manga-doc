@@ -264,6 +264,151 @@ input:focus,textarea:focus,select:focus{
 .switch-row input[type="checkbox"]{width:18px;height:18px}
 
 
+/* ===== V2：首页重新设计（仅前台） ===== */
+.home-page{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 8% -5%,rgba(77,91,214,.12),transparent 28%),
+    radial-gradient(circle at 92% 8%,rgba(119,91,214,.09),transparent 24%),
+    #f6f7fb;
+}
+.home-wrap{width:min(1180px,calc(100% - 32px));margin:auto}
+.home-nav{
+  height:76px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(228,231,236,.8)
+}
+.home-brand{display:flex;align-items:center;gap:12px;font-size:17px;font-weight:850;letter-spacing:.01em}
+.home-brand-mark{
+  width:40px;height:40px;border-radius:12px;display:grid;place-items:center;
+  color:#fff;font-weight:900;background:linear-gradient(145deg,#263d87,#6556d8);
+  box-shadow:0 10px 26px rgba(65,73,172,.2)
+}
+.home-admin-link{
+  color:#475467;font-size:13px;padding:9px 12px;border:1px solid #e4e7ec;
+  background:rgba(255,255,255,.82);border-radius:10px
+}
+.home-hero{
+  margin-top:28px;padding:42px 44px 38px;border:1px solid #e5e7ee;
+  border-radius:26px;background:rgba(255,255,255,.92);
+  box-shadow:0 22px 70px rgba(26,35,71,.08);
+  display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:34px;align-items:center
+}
+.home-kicker{
+  display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;
+  background:#f0f2ff;color:#4147a8;font-size:12px;font-weight:750
+}
+.home-hero h1{
+  margin:16px 0 13px;font-size:clamp(34px,5vw,54px);line-height:1.08;
+  letter-spacing:-.035em;color:#101828
+}
+.home-hero p{margin:0;color:#667085;font-size:15px;line-height:1.85;max-width:700px}
+.hero-side{
+  padding:22px;border-radius:20px;background:linear-gradient(145deg,#172554,#35318f);
+  color:#fff;min-height:180px;display:flex;flex-direction:column;justify-content:space-between
+}
+.hero-side strong{font-size:14px}
+.hero-side .big{font-size:30px;font-weight:900;letter-spacing:-.03em}
+.hero-side .small{font-size:12px;line-height:1.7;color:rgba(255,255,255,.72)}
+.home-search{
+  margin-top:18px;display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:10px
+}
+.home-search input,.home-search select{
+  min-height:48px;border-radius:13px;border:1px solid #dfe3ea;background:#fff
+}
+.front-section{margin-top:24px}
+.front-section-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px
+}
+.front-section-head h2{margin:0;font-size:21px;letter-spacing:-.02em}
+.front-section-head p{margin:4px 0 0;color:#98a2b3;font-size:12px}
+.resource-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px
+}
+.resource-card{
+  position:relative;background:#fff;border:1px solid #e5e7ec;border-radius:18px;
+  padding:18px;box-shadow:0 12px 38px rgba(16,24,40,.055);
+  display:flex;flex-direction:column;min-height:285px;transition:.18s ease
+}
+.resource-card:hover{transform:translateY(-2px);box-shadow:0 18px 48px rgba(16,24,40,.09)}
+.resource-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.resource-icon{
+  width:46px;height:46px;border-radius:13px;display:grid;place-items:center;
+  background:#f0f2ff;color:#4b50b8;font-size:12px;font-weight:900
+}
+.resource-badges{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.resource-badge{
+  padding:5px 8px;border-radius:999px;background:#f2f4f7;color:#475467;
+  font-size:11px;font-weight:700
+}
+.resource-badge.pin{background:#fff5d9;color:#865b00}
+.resource-badge.rec{background:#eaf7ef;color:#18794e}
+.resource-badge.link{background:#eef4ff;color:#3538cd}
+.resource-card h3{font-size:17px;line-height:1.45;margin:15px 0 7px}
+.resource-desc{
+  color:#667085;font-size:13px;line-height:1.72;display:-webkit-box;
+  -webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden
+}
+.resource-meta{
+  display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:auto;padding-top:16px;
+  color:#98a2b3;font-size:11px
+}
+.resource-meta span:nth-child(even){text-align:right}
+.resource-actions{display:flex;gap:8px;margin-top:13px}
+.resource-actions .btn{flex:1;margin:0;padding:10px 12px;font-size:13px}
+.preview-btn{
+  flex:1;border:1px solid #d8dbe7;border-radius:11px;background:#fff;color:#344054;
+  padding:10px 12px;font-weight:700
+}
+.recommended-shell{
+  padding:18px;border-radius:22px;border:1px solid #e5e7ec;
+  background:linear-gradient(145deg,rgba(245,247,255,.98),rgba(255,255,255,.98))
+}
+.front-notice-row{display:grid;grid-template-columns:1.35fr .9fr;gap:14px;margin-top:18px}
+.front-notice-row .notice-board,.front-notice-row .submission-box{margin:0;height:100%}
+.front-notice-row .submission-box{grid-template-columns:1fr}
+.front-notice-row .email-link{min-width:0;width:100%}
+.preview-mask{
+  position:fixed;inset:0;background:rgba(16,24,40,.62);backdrop-filter:blur(5px);
+  display:grid;place-items:center;padding:18px;z-index:1200
+}
+.preview-dialog{
+  width:min(1050px,100%);height:min(84vh,860px);background:#fff;border-radius:20px;
+  overflow:hidden;display:flex;flex-direction:column;box-shadow:0 34px 110px rgba(0,0,0,.28)
+}
+.preview-head{
+  height:58px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px 0 20px;border-bottom:1px solid #e5e7ec
+}
+.preview-head strong{font-size:14px}
+.preview-frame{border:0;width:100%;height:100%;background:#f5f6f8}
+.home-footer{
+  margin-top:34px;padding:25px 0 34px;border-top:1px solid #e5e7ec;
+  color:#98a2b3;font-size:12px;display:flex;justify-content:space-between;gap:18px
+}
+
+/* ===== V2：后台资料元数据 ===== */
+.admin-meta-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:8px
+}
+.admin-meta-chip{
+  padding:7px 9px;border-radius:9px;background:#f8f9fc;color:#667085;font-size:11px
+}
+.recommend-chip{background:#eaf7ef!important;color:#18794e!important}
+.edit-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+@media(max-width:900px){
+  .home-hero{grid-template-columns:1fr}
+  .hero-side{min-height:145px}
+  .resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .front-notice-row{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .home-hero{padding:28px 22px}
+  .home-search,.resource-grid{grid-template-columns:1fr}
+  .home-footer{flex-direction:column}
+  .admin-meta-grid,.edit-two{grid-template-columns:1fr 1fr}
+}
+
 /* admin */
 .admin{width:min(1050px,calc(100% - 32px));margin:40px auto}
 .panel{
@@ -342,67 +487,163 @@ const homeHtml = `<!doctype html>
 <title>人民邮电出版社工具包</title>
 <style>${css}</style>
 </head>
-<body>
-<div class="wrap">
-  <nav class="nav">
-    <div class="brand"><span class="logo">AI</span>人民邮电出版社工具包</div>
-    <a href="/admin.html" style="color:#667085;font-size:14px">管理员入口</a>
+<body class="home-page">
+<div class="home-wrap">
+  <nav class="home-nav">
+    <div class="home-brand"><span class="home-brand-mark">邮</span>人民邮电出版社工具包</div>
+    <a class="home-admin-link" href="/admin.html">管理员入口</a>
   </nav>
 
-  <header class="hero">
-    <span class="tag">✦ 课程资料 · 模板 · 配套资源</span>
-    <h1>把学习资料，集中在一个地方</h1>
-    <p>文件可以直接下载，工具或资源网址可以一键直达。支持 PDF、Word、PPT、Excel、压缩包及外部链接。</p>
-    <div class="tools">
-      <input id="q" placeholder="搜索文档名称或关键词">
-      <select id="cat"><option value="">全部分类</option></select>
+  <header class="home-hero">
+    <div>
+      <span class="home-kicker">人民邮电出版社 · AI学习配套资源</span>
+      <h1>资料、工具与课程配套资源，一站获取</h1>
+      <p>集中管理课程文档、模板、工具入口与更新资源。支持大文件下载、工具直达、资料检索与在线预览。</p>
+      <div class="home-search">
+        <input id="q" placeholder="搜索资料名称、简介或分类">
+        <select id="cat"><option value="">全部分类</option></select>
+      </div>
+    </div>
+    <div class="hero-side">
+      <strong>资源中心</strong>
+      <div class="big" id="heroCount">0 份资料</div>
+      <div class="small" id="heroSub">文件与工具统一管理，持续更新课程配套内容。</div>
     </div>
   </header>
 
-  <section id="announcementBox" class="notice-board hidden">
-    <div class="notice-title">📌 <span id="announcementTitle">置顶公告</span></div>
-    <div id="announcementContent" class="notice-content"></div>
-  </section>
+  <div class="front-notice-row">
+    <section id="announcementBox" class="notice-board hidden">
+      <div class="notice-title">📌 <span id="announcementTitle">置顶公告</span></div>
+      <div id="announcementContent" class="notice-content"></div>
+    </section>
 
-  <section id="submissionBox" class="submission-box hidden">
-    <div>
-      <h3 id="submissionTitle">投稿邮箱</h3>
-      <p id="submissionContent"></p>
-    </div>
-    <a id="submissionEmail" class="email-link" href="#"></a>
-  </section>
-
-  <div class="row">
-    <h2>资料与工具</h2>
-    <span id="count" class="notice"></span>
+    <section id="submissionBox" class="submission-box hidden">
+      <div>
+        <h3 id="submissionTitle">投稿邮箱</h3>
+        <p id="submissionContent"></p>
+      </div>
+      <a id="submissionEmail" class="email-link" href="#"></a>
+    </section>
   </div>
-  <main class="grid" id="grid"></main>
+
+  <section id="recommendedSection" class="front-section hidden">
+    <div class="front-section-head">
+      <div>
+        <h2>推荐资源</h2>
+        <p>后台标记为推荐的重点资料与工具</p>
+      </div>
+    </div>
+    <div class="recommended-shell">
+      <div id="recommendedGrid" class="resource-grid"></div>
+    </div>
+  </section>
+
+  <section class="front-section">
+    <div class="front-section-head">
+      <div>
+        <h2>全部资料与工具</h2>
+        <p>支持搜索、分类筛选、下载与在线预览</p>
+      </div>
+      <span id="count" class="notice"></span>
+    </div>
+    <main class="resource-grid" id="grid"></main>
+  </section>
+
+  <footer class="home-footer">
+    <span>人民邮电出版社工具包</span>
+    <span>课程资料 · 工具资源 · 持续更新</span>
+  </footer>
+</div>
+
+<div id="previewMask" class="preview-mask hidden">
+  <div class="preview-dialog">
+    <div class="preview-head">
+      <strong id="previewTitle">在线预览</strong>
+      <button id="previewClose" class="close-btn" type="button">×</button>
+    </div>
+    <iframe id="previewFrame" class="preview-frame" title="在线预览"></iframe>
+  </div>
 </div>
 
 <script>
 let docs=[];
 const E=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-function sz(b=0){return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":(b/1048576).toFixed(1)+" MB"}
-function render(){
+function sz(b=0){
+  if(!b)return "—";
+  return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":b<1073741824?(b/1048576).toFixed(1)+" MB":(b/1073741824).toFixed(2)+" GB";
+}
+function dt(v){
+  if(!v)return "—";
+  const d=new Date(v);
+  if(Number.isNaN(d.getTime()))return "—";
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function canPreview(d){
+  if(d.kind==="link")return false;
+  const t=String(d.type||"").toUpperCase();
+  return t==="PDF"||t==="TXT";
+}
+function card(d){
+  const badges=
+    (d.pinned?'<span class="resource-badge pin">置顶</span>':'')+
+    (d.recommended?'<span class="resource-badge rec">推荐</span>':'')+
+    (d.kind==="link"?'<span class="resource-badge link">直达链接</span>':'')+
+    '<span class="resource-badge">'+E(d.category||"其他资料")+'</span>';
+
+  const action=d.kind==="link"
+    ? '<a class="btn" target="_blank" rel="noopener noreferrer" href="/go/'+encodeURIComponent(d.id)+'">立即使用</a>'
+    : '<a class="btn" href="/download/'+encodeURIComponent(d.id)+'">下载资料</a>';
+
+  const preview=canPreview(d)
+    ? '<button class="preview-btn" onclick="openPreview(\\''+d.id+'\\',\\''+E(d.title).replace(/'/g,"&#39;")+'\\')">在线预览</button>'
+    : '';
+
+  return '<article class="resource-card">'+
+    '<div class="resource-top"><div class="resource-icon">'+(d.kind==="link"?"LINK":E(d.type||"FILE"))+'</div><div class="resource-badges">'+badges+'</div></div>'+
+    '<h3>'+E(d.title)+'</h3>'+
+    '<div class="resource-desc">'+E(d.description||"暂无简介")+'</div>'+
+    '<div class="resource-meta">'+
+      '<span>版本 '+E(d.version||"V1.0")+'</span>'+
+      '<span>更新 '+dt(d.updatedAt||d.createdAt)+'</span>'+
+      '<span>'+(d.kind==="link"?"访问":"下载")+' '+Number(d.downloads||0)+' 次</span>'+
+      '<span>'+(d.kind==="link"?"外部工具":sz(d.size))+'</span>'+
+    '</div>'+
+    '<div class="resource-actions">'+preview+action+'</div>'+
+  '</article>';
+}
+function filtered(){
   const q=document.getElementById("q").value.toLowerCase().trim();
   const c=document.getElementById("cat").value;
-  const arr=docs.filter(d=>
-    (!q||((d.title+" "+d.description+" "+d.category).toLowerCase().includes(q))) &&
+  return docs.filter(d=>
+    (!q||((String(d.title||"")+" "+String(d.description||"")+" "+String(d.category||"")+" "+String(d.version||"")).toLowerCase().includes(q))) &&
     (!c||d.category===c)
   );
-  document.getElementById("count").textContent="共 "+arr.length+" 份资料";
-  document.getElementById("grid").innerHTML=arr.length
-    ? arr.map(d=>'<article class="card">'+
-      '<div class="row"><div class="file">'+(d.kind==="link"?"LINK":E(d.type||"FILE"))+'</div><div style="display:flex;gap:6px;align-items:center">'+(d.pinned?'<span class="badge" style="background:#fff3cd;color:#8a6116">置顶</span>':'')+(d.kind==="link"?'<span class="badge" style="background:#eef4ff;color:#3538cd">直达链接</span>':'')+'<span class="badge">'+E(d.category||"其他资料")+'</span></div></div>'+
-      '<h3>'+E(d.title)+'</h3>'+
-      '<div class="desc">'+E(d.description||"课程配套学习资料")+'</div>'+
-      '<div class="meta">'+(d.kind==="link"?"访问 ":"下载 ")+Number(d.downloads||0)+' 次'+(d.kind==="link"?" · 外部链接":" · "+sz(d.size))+'</div>'+
-      (d.kind==="link"
-        ? '<a class="btn" target="_blank" rel="noopener noreferrer" href="/go/'+encodeURIComponent(d.id)+'">立即前往</a>'
-        : '<a class="btn" href="/download/'+encodeURIComponent(d.id)+'">立即下载</a>')+
-      '</article>').join("")
-    : '<div class="empty">暂时还没有资料</div>';
 }
+function render(){
+  const arr=filtered();
+  document.getElementById("count").textContent="共 "+arr.length+" 项";
+  document.getElementById("grid").innerHTML=arr.length?arr.map(card).join(""):'<div class="empty">没有找到符合条件的资料</div>';
+
+  const rec=docs.filter(d=>d.recommended);
+  const rs=document.getElementById("recommendedSection");
+  if(rec.length){
+    document.getElementById("recommendedGrid").innerHTML=rec.slice(0,6).map(card).join("");
+    rs.classList.remove("hidden");
+  }else{
+    rs.classList.add("hidden");
+  }
+}
+window.openPreview=(id,title)=>{
+  document.getElementById("previewTitle").textContent=title||"在线预览";
+  document.getElementById("previewFrame").src="/preview/"+encodeURIComponent(id);
+  document.getElementById("previewMask").classList.remove("hidden");
+};
+function closePreview(){
+  document.getElementById("previewMask").classList.add("hidden");
+  document.getElementById("previewFrame").src="about:blank";
+}
+document.getElementById("previewClose").onclick=closePreview;
+document.getElementById("previewMask").addEventListener("click",e=>{if(e.target.id==="previewMask")closePreview()});
 
 fetch("/api/site-settings").then(r=>r.json()).then(s=>{
   const a=s.announcement||{};
@@ -422,7 +663,6 @@ fetch("/api/site-settings").then(r=>r.json()).then(s=>{
     if(sub.email){
       email.textContent=sub.email;
       email.href="mailto:"+encodeURIComponent(sub.email);
-      email.style.display="inline-flex";
     }else{
       email.textContent="邮箱暂未设置";
       email.removeAttribute("href");
@@ -433,9 +673,12 @@ fetch("/api/site-settings").then(r=>r.json()).then(s=>{
 
 fetch("/api/documents").then(r=>r.json()).then(x=>{
   docs=x;
+  document.getElementById("heroCount").textContent=docs.length+" 项资源";
+  const fileCount=docs.filter(d=>d.kind!=="link").length;
+  const linkCount=docs.filter(d=>d.kind==="link").length;
+  document.getElementById("heroSub").textContent="文件 "+fileCount+" 项 · 工具链接 "+linkCount+" 项 · 持续更新";
   const cs=[...new Set(docs.map(d=>d.category).filter(Boolean))];
-  document.getElementById("cat").innerHTML='<option value="">全部分类</option>'+
-    cs.map(c=>'<option>'+E(c)+'</option>').join("");
+  document.getElementById("cat").innerHTML='<option value="">全部分类</option>'+cs.map(c=>'<option>'+E(c)+'</option>').join("");
   render();
 });
 document.getElementById("q").oninput=render;
@@ -551,6 +794,14 @@ const adminHtml = `<!doctype html>
           <label>分类</label>
           <input name="category" required>
         </div>
+        <div>
+          <label>版本</label>
+          <input name="version" value="V1.0" placeholder="例如：V1.0">
+        </div>
+        <div>
+          <label>排序值</label>
+          <input name="sortOrder" type="number" value="0" placeholder="数字越大越靠前">
+        </div>
         <div class="full">
           <label>简介</label>
           <textarea name="description" placeholder="填写这份资料的介绍"></textarea>
@@ -584,6 +835,14 @@ const adminHtml = `<!doctype html>
         <div>
           <label>分类</label>
           <input name="category" placeholder="例如：生视频工具" required>
+        </div>
+        <div>
+          <label>版本</label>
+          <input name="version" value="V1.0" placeholder="例如：V1.0">
+        </div>
+        <div>
+          <label>排序值</label>
+          <input name="sortOrder" type="number" value="0" placeholder="数字越大越靠前">
         </div>
         <div class="full">
           <label>简介</label>
@@ -639,6 +898,22 @@ const adminHtml = `<!doctype html>
         <textarea id="editDescription" placeholder="修改这份资料的简介"></textarea>
       </div>
 
+      <div class="edit-two" style="margin-bottom:14px">
+        <div>
+          <label>版本</label>
+          <input id="editVersion" placeholder="例如：V1.0">
+        </div>
+        <div>
+          <label>排序值</label>
+          <input id="editSortOrder" type="number" placeholder="数字越大越靠前">
+        </div>
+      </div>
+
+      <div style="margin-bottom:14px">
+        <label>最后更新时间</label>
+        <div id="editUpdatedAt" class="file-lock">保存修改后自动更新</div>
+      </div>
+
       <div id="editFileBlock" style="margin-bottom:14px">
         <label>当前文件</label>
         <div id="editFileName" class="file-lock"></div>
@@ -664,6 +939,12 @@ const adminHtml = `<!doctype html>
 <script>
 const E=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 let adminDocs=[];
+function formatAdminDate(v){
+  if(!v)return "—";
+  const d=new Date(v);
+  if(Number.isNaN(d.getTime()))return "—";
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+}
 
 async function auth(){
   const d=await fetch("/api/me").then(r=>r.json());
@@ -774,6 +1055,8 @@ document.getElementById("uf").onsubmit=async e=>{
         title:fd.get("title"),
         category:fd.get("category"),
         description:fd.get("description"),
+        version:fd.get("version"),
+        sortOrder:Number(fd.get("sortOrder")||0),
         originalName:file.name,
         type:(file.name.split(".").pop()||"FILE").toUpperCase(),
         size:file.size
@@ -893,6 +1176,8 @@ document.getElementById("linkForm").onsubmit=async e=>{
     title:form.get("title"),
     category:form.get("category"),
     description:form.get("description"),
+    version:form.get("version"),
+    sortOrder:Number(form.get("sortOrder")||0),
     url:form.get("url")
   };
 
@@ -929,12 +1214,19 @@ async function load(){
     ? adminDocs.map(d=>
       '<div class="item">'+
         '<div>'+
-          '<h3>'+E(d.title)+(d.pinned?' <span class="badge" style="background:#fff3cd;color:#8a6116">已置顶</span>':'')+(d.visible===false?' <span class="badge">已隐藏</span>':'')+'</h3>'+
+          '<h3>'+E(d.title)+(d.pinned?' <span class="badge" style="background:#fff3cd;color:#8a6116">已置顶</span>':'')+(d.recommended?' <span class="badge recommend-chip">已推荐</span>':'')+(d.visible===false?' <span class="badge">已隐藏</span>':'')+'</h3>'+
           '<p>'+E(d.category)+' · '+(d.kind==="link"?"直达链接":E(d.type||"FILE"))+' · '+(d.kind==="link"?"访问 ":"下载 ")+Number(d.downloads||0)+' 次</p>'+
           '<div class="admin-desc">'+E(d.description||"暂无简介")+'</div>'+
+          '<div class="admin-meta-grid">'+
+            '<div class="admin-meta-chip">版本：'+E(d.version||"V1.0")+'</div>'+
+            '<div class="admin-meta-chip">排序：'+Number(d.sortOrder||0)+'</div>'+
+            '<div class="admin-meta-chip">更新：'+formatAdminDate(d.updatedAt||d.createdAt)+'</div>'+
+            '<div class="admin-meta-chip">'+(d.kind==="link"?"工具链接":"资料文件")+'</div>'+
+          '</div>'+
         '</div>'+
         '<div class="actions">'+
           '<button class="mini" onclick="pinD(\\''+d.id+'\\','+Boolean(d.pinned)+')">'+(d.pinned?'取消置顶':'置顶')+'</button>'+
+          '<button class="mini" onclick="recD(\\''+d.id+'\\','+Boolean(d.recommended)+')">'+(d.recommended?'取消推荐':'推荐')+'</button>'+
           '<button class="mini primary" onclick="openEdit(\\''+d.id+'\\')">编辑资料</button>'+
           '<button class="mini" onclick="visD(\\''+d.id+'\\','+(d.visible!==false)+')">'+(d.visible===false?'显示':'隐藏')+'</button>'+
           '<button class="mini danger" onclick="delD(\\''+d.id+'\\')">删除</button>'+
@@ -952,6 +1244,9 @@ window.openEdit=id=>{
   document.getElementById("editTitle").value=d.title||"";
   document.getElementById("editCategory").value=d.category||"";
   document.getElementById("editDescription").value=d.description||"";
+  document.getElementById("editVersion").value=d.version||"V1.0";
+  document.getElementById("editSortOrder").value=Number(d.sortOrder||0);
+  document.getElementById("editUpdatedAt").textContent=formatAdminDate(d.updatedAt||d.createdAt);
 
   const isLink=d.kind==="link";
   document.getElementById("editFileBlock").classList.toggle("hidden",isLink);
@@ -988,6 +1283,8 @@ document.getElementById("editForm").onsubmit=async e=>{
         title:document.getElementById("editTitle").value,
         category:document.getElementById("editCategory").value,
         description:document.getElementById("editDescription").value,
+        version:document.getElementById("editVersion").value,
+        sortOrder:Number(document.getElementById("editSortOrder").value||0),
         url:document.getElementById("editLinkBlock").classList.contains("hidden")
           ? undefined
           : document.getElementById("editUrl").value
@@ -1015,6 +1312,15 @@ window.pinD=async(id,pinned)=>{
     method:"PATCH",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({pinned:!pinned})
+  });
+  load();
+};
+
+window.recD=async(id,recommended)=>{
+  await fetch("/api/admin/documents/"+encodeURIComponent(id),{
+    method:"PATCH",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({recommended:!recommended})
   });
   load();
 };
@@ -1099,7 +1405,11 @@ app.get("/api/documents",(req,res)=>{
     .sort((a,b)=>{
       const pinDiff=Number(Boolean(b.pinned))-Number(Boolean(a.pinned));
       if(pinDiff!==0) return pinDiff;
-      return (b.createdAt||"").localeCompare(a.createdAt||"");
+      const recDiff=Number(Boolean(b.recommended))-Number(Boolean(a.recommended));
+      if(recDiff!==0) return recDiff;
+      const sortDiff=Number(b.sortOrder||0)-Number(a.sortOrder||0);
+      if(sortDiff!==0) return sortDiff;
+      return String(b.updatedAt||b.createdAt||"").localeCompare(String(a.updatedAt||a.createdAt||""));
     });
   res.json(docs);
 });
@@ -1109,7 +1419,11 @@ app.get("/api/admin/documents",adminOnly,(req,res)=>{
     readDocs().sort((a,b)=>{
       const pinDiff=Number(Boolean(b.pinned))-Number(Boolean(a.pinned));
       if(pinDiff!==0) return pinDiff;
-      return (b.createdAt||"").localeCompare(a.createdAt||"");
+      const recDiff=Number(Boolean(b.recommended))-Number(Boolean(a.recommended));
+      if(recDiff!==0) return recDiff;
+      const sortDiff=Number(b.sortOrder||0)-Number(a.sortOrder||0);
+      if(sortDiff!==0) return sortDiff;
+      return String(b.updatedAt||b.createdAt||"").localeCompare(String(a.updatedAt||a.createdAt||""));
     })
   );
 });
@@ -1136,7 +1450,11 @@ app.post("/api/admin/links",adminOnly,(req,res)=>{
     downloads:0,
     visible:true,
     pinned:false,
-    createdAt:new Date().toISOString()
+    recommended:false,
+    version:clean(req.body.version,50)||"V1.0",
+    sortOrder:Number(req.body.sortOrder||0),
+    createdAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString()
   };
 
   docs.push(doc);
@@ -1231,7 +1549,11 @@ app.post("/api/admin/uploads/complete",adminOnly,async(req,res)=>{
       downloads:0,
       visible:true,
       pinned:false,
-      createdAt:new Date().toISOString()
+      recommended:false,
+      version:clean(req.body.version,50)||"V1.0",
+      sortOrder:Number(req.body.sortOrder||0),
+      createdAt:new Date().toISOString(),
+      updatedAt:new Date().toISOString()
     };
 
     docs.push(doc);
@@ -1262,7 +1584,11 @@ app.post("/api/admin/documents",adminOnly,upload.single("file"),(req,res)=>{
     downloads:0,
     visible:true,
     pinned:false,
-    createdAt:new Date().toISOString()
+    recommended:false,
+    version:clean(req.body.version,50)||"V1.0",
+    sortOrder:Number(req.body.sortOrder||0),
+    createdAt:new Date().toISOString(),
+    updatedAt:new Date().toISOString()
   };
 
   docs.push(doc);
@@ -1296,6 +1622,19 @@ app.patch("/api/admin/documents/:id",adminOnly,(req,res)=>{
 
   if("pinned" in req.body) {
     d.pinned=Boolean(req.body.pinned);
+  }
+
+  if("recommended" in req.body) {
+    d.recommended=Boolean(req.body.recommended);
+  }
+
+  if("version" in req.body) {
+    d.version=clean(req.body.version,50)||"V1.0";
+  }
+
+  if("sortOrder" in req.body) {
+    const sortOrder=Number(req.body.sortOrder||0);
+    d.sortOrder=Number.isFinite(sortOrder)?sortOrder:0;
   }
 
   if("url" in req.body && d.kind==="link") {
@@ -1353,6 +1692,46 @@ app.get("/go/:id",(req,res)=>{
   writeDocs(docs);
 
   res.redirect(url);
+});
+
+app.get("/preview/:id",async(req,res)=>{
+  const docs=readDocs();
+  const d=docs.find(x=>x.id===req.params.id && x.visible!==false && x.kind!=="link");
+
+  if(!d) return res.status(404).send("文件不存在");
+
+  const type=String(d.type||"").toUpperCase();
+  if(type!=="PDF" && type!=="TXT"){
+    return res.status(415).send("该文件类型暂不支持在线预览");
+  }
+
+  const contentType=type==="PDF"?"application/pdf":"text/plain; charset=utf-8";
+
+  try{
+    if(d.storage==="bucket" && d.objectKey){
+      if(!BUCKET_READY) return res.status(503).send("Bucket 尚未连接");
+
+      const command=new GetObjectCommand({
+        Bucket:BUCKET_NAME,
+        Key:d.objectKey,
+        ResponseContentDisposition:"inline",
+        ResponseContentType:contentType
+      });
+
+      const url=await getSignedUrl(s3,command,{expiresIn:900});
+      return res.redirect(url);
+    }
+
+    const f=path.join(UPLOAD_DIR,d.storedName||"");
+    if(!d.storedName || !fs.existsSync(f)) return res.status(404).send("文件已丢失");
+
+    res.setHeader("Content-Type",contentType);
+    res.setHeader("Content-Disposition","inline");
+    return res.sendFile(f);
+  }catch(err){
+    console.error("预览失败",err);
+    res.status(500).send("预览失败，请稍后重试");
+  }
 });
 
 app.get("/download/:id",async(req,res)=>{
