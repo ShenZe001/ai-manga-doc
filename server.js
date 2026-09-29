@@ -169,6 +169,7 @@ const css = `
   --p:#5b5ff0;--p2:#8b5cf6;--danger:#d92d20;--ok:#027a48
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{
   margin:0;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
   color:var(--text);
@@ -496,7 +497,7 @@ body.xiaobei-page{margin:0;background:#f7f6f2;color:#2e302e;font-family:Inter,"P
 .xb-feature{min-height:228px;margin:18px 0 28px;padding:30px 36px;border-radius:24px;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:20px;align-items:center;background:linear-gradient(120deg,#f2c995 0%,#f7d8ae 48%,#f8e4c8 100%);overflow:hidden;position:relative}.xb-feature:after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;right:-120px;top:-110px;border:1px solid rgba(160,93,36,.16);box-shadow:0 0 0 28px rgba(160,93,36,.05),0 0 0 58px rgba(160,93,36,.04)}.xb-feature-copy{position:relative;z-index:1}.xb-feature-label{color:#9e5f2f;font-size:11px;font-weight:900;letter-spacing:.16em}.xb-feature-label span{opacity:.6;margin:0 5px}.xb-feature h2{margin:12px 0 7px;color:#5b3b24;font-size:clamp(24px,3.2vw,38px);letter-spacing:-.035em}.xb-feature p{margin:0;color:#815f42;font-size:14px}.xb-feature-button{margin-top:20px;border:0;border-radius:9px;padding:10px 14px;background:#5b3b24;color:#fff;font-weight:800;font-size:12px}.xb-feature-art{position:relative;z-index:1;display:grid;place-items:center;color:#9b6335;opacity:.78}.xb-feature-art strong{font-size:76px;font-weight:400;line-height:1}.xb-feature-art small{margin-top:8px;font-size:11px;letter-spacing:.16em;color:#96633d}
 .xb-notice{padding:16px 18px;margin:0 0 22px;border:1px solid #eadab8;border-radius:15px;background:#fff9ec;color:#76552a}.xb-notice strong{display:block;margin-bottom:6px;font-size:13px}.xb-notice p{margin:0;white-space:pre-wrap;line-height:1.75;font-size:13px}
 .xb-library{margin-top:10px}.xb-toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:12px}.xb-list-heading{display:flex;align-items:baseline;gap:9px}.xb-list-heading h2{margin:0;font-size:23px;letter-spacing:-.035em;color:#2e302e}.xb-list-heading span{color:#aaa49a;font-size:12px}.xb-search{width:min(340px,100%);display:flex;align-items:center;gap:8px;padding:0 13px;border:1px solid #e2ded6;border-radius:10px;background:#fff;color:#a7a198}.xb-search input{min-height:40px;border:0!important;box-shadow:none!important;padding:0;background:transparent;font-size:13px;color:#45463f}.xb-typebar{display:flex;justify-content:space-between;gap:12px;margin-bottom:14px;color:#aca69e;font-size:11px}.xb-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.xb-card{min-width:0;border:1px solid #e6e1d9;border-radius:17px;background:#fff;overflow:hidden;box-shadow:0 10px 32px rgba(80,64,39,.045);transition:.18s ease}.xb-card:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(80,64,39,.1)}.xb-cover{width:100%;min-height:138px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:17px 18px;border:0;text-align:left;position:relative;cursor:pointer;color:#fff}.xb-cover.orange{background:linear-gradient(135deg,#dc7541,#f0ad68)}.xb-cover.blue{background:linear-gradient(135deg,#6e8ba6,#a7c1cd)}.xb-cover.green{background:linear-gradient(135deg,#769781,#b3c59d)}.xb-cover.purple{background:linear-gradient(135deg,#8a78a8,#c7b1d2)}.xb-cover-top{width:100%;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;opacity:.88}.xb-cover-icon{font-size:26px;line-height:1}.xb-cover strong{max-width:84%;font-size:19px;line-height:1.3;letter-spacing:-.02em}.xb-cover small{font-size:11px;opacity:.8}.xb-cover-corner{position:absolute;right:16px;bottom:14px;font-size:22px;opacity:.7}.xb-card-body{padding:15px 17px 16px}.xb-category{color:#d97643;font-size:11px;font-weight:900}.xb-card h3{margin:7px 0 6px;color:#363831;font-size:16px;line-height:1.4}.xb-card h3 button{border:0;padding:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}.xb-desc{min-height:38px;color:#8d8c84;font-size:12px;line-height:1.65;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.xb-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px;color:#b0aaa1;font-size:11px}.xb-card-actions{display:flex;align-items:center;gap:10px}.xb-card-actions a,.xb-card-actions button{border:0;background:transparent;color:#6b6c64;font-size:11px;font-weight:800;padding:0;cursor:pointer}.xb-card-actions a:hover,.xb-card-actions button:hover{color:#e16e36}.xb-direct{color:#d46f3e!important}.xb-empty{grid-column:1/-1;padding:55px 20px;border:1px dashed #ddd7cd;border-radius:16px;background:#fff;text-align:center;color:#aaa49b;font-size:13px}.xb-submission{margin-top:26px;padding:18px 20px;border:1px solid #e6e1d8;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px}.xb-submission h3{margin:0 0 5px;color:#45463f;font-size:14px}.xb-submission p{margin:0;color:#99938a;font-size:12px;line-height:1.7;white-space:pre-wrap}.xb-email{display:inline-flex;align-items:center;justify-content:center;min-width:190px;padding:10px 13px;border-radius:9px;background:#fff8f1;border:1px solid #f0d5bf;color:#d36e3a;font-size:12px;font-weight:800;word-break:break-all}.xb-footer{margin-top:34px;padding-top:22px;border-top:1px solid #e6e1d8;display:flex;justify-content:space-between;gap:18px;color:#aaa49a;font-size:11px}
-.xb-modal-mask{position:fixed;inset:0;z-index:2000;padding:16px;background:rgba(38,34,28,.48);backdrop-filter:blur(5px);display:grid;place-items:center}.xb-modal{width:min(720px,100%);max-height:min(88vh,760px);overflow:auto;border-radius:19px;background:#fffdf9;box-shadow:0 28px 90px rgba(27,21,13,.25)}.xb-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:23px 24px 17px;border-bottom:1px solid #ece7df}.xb-modal-head small{display:block;color:#d1723f;font-size:11px;font-weight:900;margin-bottom:7px}.xb-modal-head h2{margin:0;color:#34362f;font-size:24px}.xb-close{width:34px;height:34px;border:1px solid #e3ddd4;border-radius:9px;background:#fff;color:#77736b;font-size:20px;line-height:1}.xb-modal-body{padding:21px 24px}.xb-modal-desc{margin:0;color:#6f7068;white-space:pre-wrap;line-height:1.85;font-size:14px}.xb-modal-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.xb-modal-meta span{padding:10px 11px;border-radius:9px;background:#f5f2ec;color:#8f8b83;font-size:11px}.xb-modal-actions{display:flex;flex-wrap:wrap;gap:9px}.xb-modal-actions a,.xb-modal-actions button{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:10px 14px;border:1px solid #ddd7ce;background:#fff;color:#5a5b53;font-size:12px;font-weight:800;cursor:pointer}.xb-modal-actions .primary{border-color:#d46f3b;background:#d8733d;color:#fff}.xb-preview{display:none;margin-top:18px;border:1px solid #e7e1d8;border-radius:11px;overflow:hidden;height:420px}.xb-preview iframe{width:100%;height:100%;border:0;background:#f5f3ef}
+.xb-modal-mask{position:fixed;inset:0;z-index:2000;padding:16px;background:rgba(38,34,28,.48);backdrop-filter:blur(5px);display:grid;place-items:center;overscroll-behavior:contain}.xb-modal-mask[hidden]{display:none!important}.xb-modal{width:min(720px,100%);max-height:min(88vh,760px);max-height:min(88dvh,760px);overflow:auto;overscroll-behavior:contain;border-radius:19px;background:#fffdf9;box-shadow:0 28px 90px rgba(27,21,13,.25)}body.xb-modal-open{overflow:hidden}.xb-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:23px 24px 17px;border-bottom:1px solid #ece7df}.xb-modal-head small{display:block;color:#d1723f;font-size:11px;font-weight:900;margin-bottom:7px}.xb-modal-head h2{margin:0;color:#34362f;font-size:24px}.xb-close{width:34px;height:34px;border:1px solid #e3ddd4;border-radius:9px;background:#fff;color:#77736b;font-size:20px;line-height:1}.xb-modal-body{padding:21px 24px}.xb-modal-desc{margin:0;color:#6f7068;white-space:pre-wrap;line-height:1.85;font-size:14px}.xb-modal-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.xb-modal-meta span{padding:10px 11px;border-radius:9px;background:#f5f2ec;color:#8f8b83;font-size:11px}.xb-modal-actions{display:flex;flex-wrap:wrap;gap:9px}.xb-modal-actions a,.xb-modal-actions button{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:10px 14px;border:1px solid #ddd7ce;background:#fff;color:#5a5b53;font-size:12px;font-weight:800;cursor:pointer}.xb-modal-actions .primary{border-color:#d46f3b;background:#d8733d;color:#fff}.xb-preview{display:none;margin-top:18px;border:1px solid #e7e1d8;border-radius:11px;overflow:hidden;height:420px}.xb-preview iframe{width:100%;height:100%;border:0;background:#f5f3ef}
 @media(max-width:1050px){.xb-main{padding-left:34px;padding-right:34px}.xb-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.xb-shell{display:block}.xb-sidebar{width:auto;min-height:auto;position:static;padding:16px;border-right:0;border-bottom:1px solid #e6e1d8}.xb-nav-label{margin:20px 4px 9px}.xb-nav{flex-direction:row;overflow-x:auto;padding-bottom:2px}.xb-nav-item{width:auto;min-width:max-content;padding:9px 11px}.xb-side-bottom{display:none}.xb-main{padding:0 16px 38px}.xb-header{display:none}.xb-heading{padding:28px 0 14px}.xb-feature{grid-template-columns:1fr;min-height:0;padding:24px 22px}.xb-feature-art{display:none}.xb-toolbar{align-items:stretch;flex-direction:column;gap:12px}.xb-search{width:100%}.xb-typebar{flex-direction:column;gap:4px}.xb-grid{grid-template-columns:1fr}.xb-submission{align-items:stretch;flex-direction:column}.xb-email{width:100%}.xb-footer{flex-direction:column;gap:7px}.xb-modal-meta{grid-template-columns:1fr 1fr}.xb-modal-head,.xb-modal-body{padding-left:18px;padding-right:18px}}
 
@@ -578,20 +579,219 @@ const homeHtml = `<!doctype html>
 <script>
 let docs=[];
 let activeCategory="";
-const E=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-function escId(v){return encodeURIComponent(String(v||""));}
-function sizeText(b){if(!b)return "在线资料";if(b<1024)return b+" B";if(b<1048576)return (b/1024).toFixed(1)+" KB";if(b<1073741824)return (b/1048576).toFixed(1)+" MB";return (b/1073741824).toFixed(2)+" GB";}
-function dateText(v){if(!v)return "—";const d=new Date(v);return Number.isNaN(d.getTime())?"—":d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
-function colorFor(d){const s=String(d.category||d.type||"");if(s.includes("工具")||d.kind==="link")return "orange";if(s.includes("Skill"))return "purple";if(s.includes("角色")||s.includes("场景"))return "green";return "blue";}
-function filtered(){const q=document.getElementById("q").value.toLowerCase().trim();return docs.filter(d=>(!activeCategory||d.category===activeCategory)&&(!q||(String(d.title||"")+" "+String(d.description||"")+" "+String(d.category||"")+" "+String(d.version||"")).toLowerCase().includes(q)));}
-function renderNav(){const counts={};docs.forEach(d=>{if(d.category)counts[d.category]=(counts[d.category]||0)+1;});const cats=Object.keys(counts);const all='<button class="xb-nav-item '+(activeCategory?"":"active")+'" data-category=""><span class="xb-nav-icon">▦</span><span>全部资料</span><small>'+docs.length+'</small></button>';document.getElementById("xbNav").innerHTML=all+cats.map(c=>'<button class="xb-nav-item '+(activeCategory===c?"active":"")+'" data-category="'+E(c)+'"><span class="xb-nav-icon">□</span><span>'+E(c)+'</span><small>'+counts[c]+'</small></button>').join("");document.querySelectorAll("#xbNav [data-category]").forEach(b=>b.onclick=()=>{activeCategory=b.dataset.category||"";renderNav();render();});}
-function card(d){const link=escId(d.id);const kind=d.kind==="link"?"在线工具":(d.type||"学习资料");const direct=d.kind==="link"?'<a class="xb-direct" href="/go/'+link+'" target="_blank" rel="noopener noreferrer">直达链接　↗</a>':"";return '<article class="xb-card"><button class="xb-cover '+colorFor(d)+'" data-open-id="'+E(d.id)+'" type="button"><span class="xb-cover-top"><span class="xb-cover-icon">'+(d.kind==="link"?"↗":"▤")+'</span><span>'+E(kind)+'</span></span><strong>'+E(d.title||"未命名资料")+'</strong><small>'+E(d.category||"其他资料")+'</small><span class="xb-cover-corner">↗</span></button><div class="xb-card-body"><span class="xb-category">'+E(d.category||"其他资料")+'</span><h3><button data-open-id="'+E(d.id)+'" type="button">'+E(d.title||"未命名资料")+'</button></h3><p class="xb-desc">'+E(d.description||"暂无简介")+'</p><div class="xb-card-bottom"><span>'+E(d.kind==="link"?"在线工具":sizeText(d.size))+'</span><div class="xb-card-actions">'+direct+'<button data-open-id="'+E(d.id)+'" type="button">查看资料　→</button></div></div></div></article>';}
-function render(){const arr=filtered();document.getElementById("xbCount").textContent=arr.length+" 份";document.getElementById("grid").innerHTML=arr.length?arr.map(card).join(""):'<div class="xb-empty">没有找到符合条件的资料</div>';document.querySelectorAll("[data-open-id]").forEach(el=>el.onclick=()=>openDetail(el.dataset.openId));}
-function renderFeature(){const d=docs.find(x=>x.recommended)||docs[0];const box=document.getElementById("xbFeature");if(!d){box.hidden=true;return;}box.hidden=false;box.querySelector("h2").textContent=d.title||"推荐资料";box.querySelector("p").textContent=d.description||"打开查看资料详情";box.querySelector(".xb-feature-label").innerHTML="推荐资料 <span>/</span> "+E(d.category||"资源");box.querySelector("button").onclick=()=>openDetail(d.id);}
-function openDetail(id){const d=docs.find(x=>x.id===id);if(!d)return;document.getElementById("detailCategory").textContent=d.category||"其他资料";document.getElementById("detailTitle").textContent=d.title||"资料详情";document.getElementById("detailDesc").textContent=d.description||"暂无简介";document.getElementById("detailMeta").innerHTML='<span>类型：'+E(d.kind==="link"?"直达链接":(d.type||"资料"))+'</span><span>更新：'+dateText(d.updatedAt||d.createdAt)+'</span><span>'+E(d.kind==="link"?"访问次数：":"文件大小：")+E(d.kind==="link"?Number(d.downloads||0):sizeText(d.size))+'</span>';let actions=d.kind==="link"?'<a class="primary" href="/go/'+escId(d.id)+'" target="_blank" rel="noopener noreferrer">打开直达链接　↗</a>':'<a class="primary" href="/download/'+escId(d.id)+'">下载资料　↓</a>';if(d.kind!=="link"&&["PDF","TXT"].includes(String(d.type||"").toUpperCase()))actions+='<button id="previewButton" type="button">在线预览</button>';document.getElementById("detailActions").innerHTML=actions;const pre=document.getElementById("detailPreview");pre.style.display="none";pre.querySelector("iframe").src="about:blank";const pb=document.getElementById("previewButton");if(pb)pb.onclick=()=>{pre.style.display="block";pre.querySelector("iframe").src="/preview/"+escId(d.id);};document.getElementById("detailMask").hidden=false;}
-function closeDetail(){document.getElementById("detailMask").hidden=true;document.getElementById("detailPreview").style.display="none";document.getElementById("detailPreview").querySelector("iframe").src="about:blank";}
-document.getElementById("detailClose").onclick=closeDetail;document.getElementById("detailMask").onclick=e=>{if(e.target.id==="detailMask")closeDetail();};document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDetail();});document.getElementById("q").oninput=render;
-Promise.all([fetch("/api/documents").then(r=>r.json()),fetch("/api/site-settings").then(r=>r.json()).catch(()=>({}))]).then(([items,settings])=>{docs=Array.isArray(items)?items:[];renderNav();renderFeature();render();const a=settings.announcement||{};if(a.enabled&&(a.title||a.content)){document.getElementById("xbNotice").hidden=false;document.getElementById("xbNoticeTitle").textContent=a.title||"置顶公告";document.getElementById("xbNoticeContent").textContent=a.content||"";}const sub=settings.submission||{};if(sub.enabled&&(sub.email||sub.content)){document.getElementById("xbSubmission").hidden=false;document.getElementById("xbSubmissionTitle").textContent=sub.title||"投稿邮箱";document.getElementById("xbSubmissionContent").textContent=sub.content||"";const ael=document.getElementById("xbSubmissionEmail");if(sub.email){ael.textContent=sub.email;ael.href="mailto:"+encodeURIComponent(sub.email);}else{ael.textContent="邮箱暂未设置";ael.removeAttribute("href");}}}).catch(()=>{document.getElementById("grid").innerHTML='<div class="xb-empty">资料加载失败，请刷新页面重试</div>';});
+let lastFocusedElement=null;
+
+const byId=id=>document.getElementById(id);
+const detailMask=byId("detailMask");
+const detailCategory=byId("detailCategory");
+const detailTitle=byId("detailTitle");
+const detailDesc=byId("detailDesc");
+const detailMeta=byId("detailMeta");
+const detailActions=byId("detailActions");
+const detailPreview=byId("detailPreview");
+const detailFrame=detailPreview.querySelector("iframe");
+
+const E=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const escId=v=>encodeURIComponent(String(v??""));
+const sameId=(a,b)=>String(a??"")===String(b??"");
+
+function sizeText(b){
+  const n=Number(b||0);
+  if(!n)return "在线资料";
+  if(n<1024)return n+" B";
+  if(n<1048576)return (n/1024).toFixed(1)+" KB";
+  if(n<1073741824)return (n/1048576).toFixed(1)+" MB";
+  return (n/1073741824).toFixed(2)+" GB";
+}
+
+function dateText(v){
+  if(!v)return "—";
+  const d=new Date(v);
+  if(Number.isNaN(d.getTime()))return "—";
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+function colorFor(d){
+  const s=String(d.category||d.type||"");
+  if(s.includes("工具")||d.kind==="link")return "orange";
+  if(s.includes("Skill"))return "purple";
+  if(s.includes("角色")||s.includes("场景"))return "green";
+  return "blue";
+}
+
+function filtered(){
+  const q=byId("q").value.toLowerCase().trim();
+  return docs.filter(d=>(!activeCategory||d.category===activeCategory)&&(!q||(String(d.title||"")+" "+String(d.description||"")+" "+String(d.category||"")+" "+String(d.version||"")).toLowerCase().includes(q)));
+}
+
+function renderNav(){
+  const counts={};
+  docs.forEach(d=>{if(d.category)counts[d.category]=(counts[d.category]||0)+1;});
+  const cats=Object.keys(counts);
+  const all='<button class="xb-nav-item '+(activeCategory?"":"active")+'" data-category=""><span class="xb-nav-icon">▦</span><span>全部资料</span><small>'+docs.length+'</small></button>';
+  byId("xbNav").innerHTML=all+cats.map(c=>'<button class="xb-nav-item '+(activeCategory===c?"active":"")+'" data-category="'+E(c)+'"><span class="xb-nav-icon">□</span><span>'+E(c)+'</span><small>'+counts[c]+'</small></button>').join("");
+  document.querySelectorAll("#xbNav [data-category]").forEach(b=>{
+    b.addEventListener("click",()=>{
+      activeCategory=b.dataset.category||"";
+      renderNav();
+      render();
+    });
+  });
+}
+
+function card(d){
+  const link=escId(d.id);
+  const kind=d.kind==="link"?"在线工具":(d.type||"学习资料");
+  const direct=d.kind==="link"?'<a class="xb-direct" href="/go/'+link+'" target="_blank" rel="noopener noreferrer">直达链接　↗</a>':"";
+  return '<article class="xb-card"><button class="xb-cover '+colorFor(d)+'" data-open-id="'+E(d.id)+'" type="button"><span class="xb-cover-top"><span class="xb-cover-icon">'+(d.kind==="link"?"↗":"▤")+'</span><span>'+E(kind)+'</span></span><strong>'+E(d.title||"未命名资料")+'</strong><small>'+E(d.category||"其他资料")+'</small><span class="xb-cover-corner">↗</span></button><div class="xb-card-body"><span class="xb-category">'+E(d.category||"其他资料")+'</span><h3><button data-open-id="'+E(d.id)+'" type="button">'+E(d.title||"未命名资料")+'</button></h3><p class="xb-desc">'+E(d.description||"暂无简介")+'</p><div class="xb-card-bottom"><span>'+E(d.kind==="link"?"在线工具":sizeText(d.size))+'</span><div class="xb-card-actions">'+direct+'<button data-open-id="'+E(d.id)+'" type="button">查看资料　→</button></div></div></div></article>';
+}
+
+function bindOpenButtons(){
+  document.querySelectorAll("[data-open-id]").forEach(el=>{
+    el.addEventListener("click",()=>openDetail(el.dataset.openId));
+  });
+}
+
+function render(){
+  const arr=filtered();
+  byId("xbCount").textContent=arr.length+" 份";
+  byId("grid").innerHTML=arr.length?arr.map(card).join(""):'<div class="xb-empty">没有找到符合条件的资料</div>';
+  bindOpenButtons();
+}
+
+function renderFeature(){
+  const d=docs.find(x=>x.recommended)||docs[0];
+  const box=byId("xbFeature");
+  if(!d){box.hidden=true;return;}
+  box.hidden=false;
+  box.querySelector("h2").textContent=d.title||"推荐资料";
+  box.querySelector("p").textContent=d.description||"打开查看资料详情";
+  box.querySelector(".xb-feature-label").innerHTML="推荐资料 <span>/</span> "+E(d.category||"资源");
+  box.querySelector("button").onclick=()=>openDetail(d.id);
+}
+
+function resetPreview(){
+  detailPreview.style.display="none";
+  detailFrame.src="about:blank";
+}
+
+function setModalOpen(open){
+  detailMask.hidden=!open;
+  document.body.classList.toggle("xb-modal-open",open);
+  detailMask.setAttribute("aria-hidden",open?"false":"true");
+}
+
+function openDetail(id){
+  const d=docs.find(x=>sameId(x.id,id));
+  if(!d)return;
+
+  lastFocusedElement=document.activeElement;
+  resetPreview();
+
+  detailCategory.textContent=d.category||"其他资料";
+  detailTitle.textContent=d.title||"资料详情";
+  detailDesc.textContent=d.description||"暂无简介";
+  detailMeta.innerHTML=
+    '<span>类型：'+E(d.kind==="link"?"直达链接":(d.type||"资料"))+'</span>'+ 
+    '<span>更新：'+dateText(d.updatedAt||d.createdAt)+'</span>'+ 
+    '<span>'+E(d.kind==="link"?"访问次数：":"文件大小：")+E(d.kind==="link"?Number(d.downloads||0):sizeText(d.size))+'</span>';
+
+  let actions="";
+  if(d.kind==="link"){
+    actions='<a class="primary" href="/go/'+escId(d.id)+'" target="_blank" rel="noopener noreferrer">打开直达链接　↗</a>';
+  }else{
+    actions='<a class="primary" href="/download/'+escId(d.id)+'">下载资料　↓</a>';
+    if(["PDF","TXT"].includes(String(d.type||"").toUpperCase())){
+      actions+='<button id="previewButton" type="button">在线预览</button>';
+    }
+  }
+  detailActions.innerHTML=actions;
+
+  const pb=byId("previewButton");
+  if(pb){
+    pb.addEventListener("click",()=>{
+      detailPreview.style.display="block";
+      detailFrame.src="/preview/"+escId(d.id);
+      detailPreview.scrollIntoView({behavior:"smooth",block:"nearest"});
+    });
+  }
+
+  setModalOpen(true);
+  requestAnimationFrame(()=>byId("detailClose").focus());
+}
+
+function closeDetail(){
+  resetPreview();
+  setModalOpen(false);
+  if(lastFocusedElement&&typeof lastFocusedElement.focus==="function"){
+    try{lastFocusedElement.focus({preventScroll:true});}catch{lastFocusedElement.focus();}
+  }
+  lastFocusedElement=null;
+}
+
+async function fetchJson(url,optional=false){
+  try{
+    const r=await fetch(url,{cache:"no-store"});
+    if(!r.ok)throw new Error("HTTP "+r.status);
+    return await r.json();
+  }catch(err){
+    if(optional)return {};
+    throw err;
+  }
+}
+
+async function init(){
+  closeDetail();
+  try{
+    const [items,settings]=await Promise.all([
+      fetchJson("/api/documents"),
+      fetchJson("/api/site-settings",true)
+    ]);
+    docs=Array.isArray(items)?items:[];
+    renderNav();
+    renderFeature();
+    render();
+
+    const a=settings.announcement||{};
+    if(a.enabled&&(a.title||a.content)){
+      byId("xbNotice").hidden=false;
+      byId("xbNoticeTitle").textContent=a.title||"置顶公告";
+      byId("xbNoticeContent").textContent=a.content||"";
+    }else{
+      byId("xbNotice").hidden=true;
+    }
+
+    const sub=settings.submission||{};
+    if(sub.enabled&&(sub.email||sub.content)){
+      byId("xbSubmission").hidden=false;
+      byId("xbSubmissionTitle").textContent=sub.title||"投稿邮箱";
+      byId("xbSubmissionContent").textContent=sub.content||"";
+      const ael=byId("xbSubmissionEmail");
+      if(sub.email){
+        ael.textContent=sub.email;
+        ael.href="mailto:"+encodeURIComponent(sub.email);
+      }else{
+        ael.textContent="邮箱暂未设置";
+        ael.removeAttribute("href");
+      }
+    }else{
+      byId("xbSubmission").hidden=true;
+    }
+  }catch(err){
+    console.error("资料加载失败",err);
+    byId("xbFeature").hidden=true;
+    byId("grid").innerHTML='<div class="xb-empty">资料加载失败，请刷新页面重试</div>';
+  }
+}
+
+byId("detailClose").addEventListener("click",closeDetail);
+detailMask.addEventListener("click",e=>{if(e.target===detailMask)closeDetail();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!detailMask.hidden)closeDetail();});
+byId("q").addEventListener("input",render);
+window.addEventListener("pageshow",e=>{if(e.persisted)closeDetail();});
+
+setModalOpen(false);
+init();
 </script>
 </body>
 </html>`;
