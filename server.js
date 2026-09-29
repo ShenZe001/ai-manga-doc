@@ -51,7 +51,7 @@ const DEFAULT_SETTINGS = {
   announcement: {
     enabled: true,
     title: "置顶公告",
-    content: "欢迎使用人民邮电出版社工具包。"
+    content: "欢迎使用 AI 漫剧资料库。"
   },
   submission: {
     enabled: true,
@@ -477,6 +477,29 @@ label{display:block;font-size:13px;color:#475467;margin-bottom:7px}
   .actions{justify-content:flex-start}
   .hero{padding-top:45px}
 }
+
+/* ===== 小北资料库风格前台 ===== */
+body.xiaobei-page{margin:0;background:#f7f6f2;color:#2e302e;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.xb-shell{min-height:100vh;display:flex}
+.xb-sidebar{width:250px;flex:0 0 250px;min-height:100vh;position:sticky;top:0;display:flex;flex-direction:column;padding:28px 20px 22px;background:#fbfaf7;border-right:1px solid #e6e1d8}
+.xb-brand{display:flex;align-items:center;gap:11px;color:#272923;font-weight:850;letter-spacing:.01em}
+.xb-brand:hover{color:#272923}
+.xb-brandmark{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#e7753c;color:#fff;font-size:20px;box-shadow:0 8px 20px rgba(231,117,60,.22)}
+.xb-brandtext{font-size:17px;line-height:1.25}.xb-brandtext small{display:block;color:#a5a096;font-size:11px;font-weight:600;letter-spacing:.05em;margin-top:3px}
+.xb-nav-label{margin:42px 10px 12px;color:#aaa49a;font-size:11px;font-weight:800;letter-spacing:.16em}
+.xb-nav{display:flex;flex-direction:column;gap:5px}
+.xb-nav-item{width:100%;display:flex;align-items:center;gap:10px;border:0;border-radius:11px;padding:11px 12px;background:transparent;color:#74756e;text-align:left;font-size:14px}
+.xb-nav-item:hover{background:#f1eee8;color:#353732}.xb-nav-item.active{background:#efe9df;color:#31332e;font-weight:800}.xb-nav-icon{width:21px;text-align:center;font-size:16px;color:#aaa39a}.xb-nav-item.active .xb-nav-icon{color:#e7753c}.xb-nav-item small{margin-left:auto;color:#aaa49a;font-size:11px}.xb-nav-item.active small{color:#d46c38}
+.xb-side-bottom{margin-top:auto;padding:16px 10px 0;border-top:1px solid #e8e3da;color:#aaa49a;font-size:12px}.xb-side-bottom p{margin:8px 0 14px;color:#a8a399}.xb-admin{display:flex;align-items:center;gap:7px;color:#716f67;font-weight:700;font-size:12px}.xb-admin:hover{color:#e16e36}
+.xb-main{min-width:0;flex:1;max-width:1450px;padding:0 6vw 54px}.xb-header{height:76px;display:flex;align-items:center;justify-content:space-between;color:#a29d94;font-size:12px}.xb-breadcrumb b{color:#52534d;font-weight:800}.xb-guide{border:1px solid #e3ded5;border-radius:9px;padding:8px 12px;background:rgba(255,255,255,.5);color:#75736b;font-size:12px}
+.xb-heading{padding:32px 0 20px}.xb-eyebrow{color:#db7440;font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.xb-title-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.xb-heading h1{margin:13px 0 10px;color:#252720;font-size:clamp(36px,5vw,58px);line-height:1.02;letter-spacing:-.055em}.xb-heading h1 span{color:#e7753c}.xb-free{padding:6px 10px;border:1px solid #e8d8c6;border-radius:999px;background:#fffaf4;color:#c56b3b;font-size:11px;font-weight:800}.xb-intro{max-width:760px;margin:0;color:#85847d;line-height:1.85;font-size:14px;white-space:pre-wrap}
+.xb-feature{min-height:228px;margin:18px 0 28px;padding:30px 36px;border-radius:24px;display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:20px;align-items:center;background:linear-gradient(120deg,#f2c995 0%,#f7d8ae 48%,#f8e4c8 100%);overflow:hidden;position:relative}.xb-feature:after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;right:-120px;top:-110px;border:1px solid rgba(160,93,36,.16);box-shadow:0 0 0 28px rgba(160,93,36,.05),0 0 0 58px rgba(160,93,36,.04)}.xb-feature-copy{position:relative;z-index:1}.xb-feature-label{color:#9e5f2f;font-size:11px;font-weight:900;letter-spacing:.16em}.xb-feature-label span{opacity:.6;margin:0 5px}.xb-feature h2{margin:12px 0 7px;color:#5b3b24;font-size:clamp(24px,3.2vw,38px);letter-spacing:-.035em}.xb-feature p{margin:0;color:#815f42;font-size:14px}.xb-feature-button{margin-top:20px;border:0;border-radius:9px;padding:10px 14px;background:#5b3b24;color:#fff;font-weight:800;font-size:12px}.xb-feature-art{position:relative;z-index:1;display:grid;place-items:center;color:#9b6335;opacity:.78}.xb-feature-art strong{font-size:76px;font-weight:400;line-height:1}.xb-feature-art small{margin-top:8px;font-size:11px;letter-spacing:.16em;color:#96633d}
+.xb-notice{padding:16px 18px;margin:0 0 22px;border:1px solid #eadab8;border-radius:15px;background:#fff9ec;color:#76552a}.xb-notice strong{display:block;margin-bottom:6px;font-size:13px}.xb-notice p{margin:0;white-space:pre-wrap;line-height:1.75;font-size:13px}
+.xb-library{margin-top:10px}.xb-toolbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:12px}.xb-list-heading{display:flex;align-items:baseline;gap:9px}.xb-list-heading h2{margin:0;font-size:23px;letter-spacing:-.035em;color:#2e302e}.xb-list-heading span{color:#aaa49a;font-size:12px}.xb-search{width:min(340px,100%);display:flex;align-items:center;gap:8px;padding:0 13px;border:1px solid #e2ded6;border-radius:10px;background:#fff;color:#a7a198}.xb-search input{min-height:40px;border:0!important;box-shadow:none!important;padding:0;background:transparent;font-size:13px;color:#45463f}.xb-typebar{display:flex;justify-content:space-between;gap:12px;margin-bottom:14px;color:#aca69e;font-size:11px}.xb-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.xb-card{min-width:0;border:1px solid #e6e1d9;border-radius:17px;background:#fff;overflow:hidden;box-shadow:0 10px 32px rgba(80,64,39,.045);transition:.18s ease}.xb-card:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(80,64,39,.1)}.xb-cover{width:100%;min-height:138px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:17px 18px;border:0;text-align:left;position:relative;cursor:pointer;color:#fff}.xb-cover.orange{background:linear-gradient(135deg,#dc7541,#f0ad68)}.xb-cover.blue{background:linear-gradient(135deg,#6e8ba6,#a7c1cd)}.xb-cover.green{background:linear-gradient(135deg,#769781,#b3c59d)}.xb-cover.purple{background:linear-gradient(135deg,#8a78a8,#c7b1d2)}.xb-cover-top{width:100%;display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;opacity:.88}.xb-cover-icon{font-size:26px;line-height:1}.xb-cover strong{max-width:84%;font-size:19px;line-height:1.3;letter-spacing:-.02em}.xb-cover small{font-size:11px;opacity:.8}.xb-cover-corner{position:absolute;right:16px;bottom:14px;font-size:22px;opacity:.7}.xb-card-body{padding:15px 17px 16px}.xb-category{color:#d97643;font-size:11px;font-weight:900}.xb-card h3{margin:7px 0 6px;color:#363831;font-size:16px;line-height:1.4}.xb-card h3 button{border:0;padding:0;background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer}.xb-desc{min-height:38px;color:#8d8c84;font-size:12px;line-height:1.65;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}.xb-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px;color:#b0aaa1;font-size:11px}.xb-card-actions{display:flex;align-items:center;gap:10px}.xb-card-actions a,.xb-card-actions button{border:0;background:transparent;color:#6b6c64;font-size:11px;font-weight:800;padding:0;cursor:pointer}.xb-card-actions a:hover,.xb-card-actions button:hover{color:#e16e36}.xb-direct{color:#d46f3e!important}.xb-empty{grid-column:1/-1;padding:55px 20px;border:1px dashed #ddd7cd;border-radius:16px;background:#fff;text-align:center;color:#aaa49b;font-size:13px}.xb-submission{margin-top:26px;padding:18px 20px;border:1px solid #e6e1d8;border-radius:15px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:18px}.xb-submission h3{margin:0 0 5px;color:#45463f;font-size:14px}.xb-submission p{margin:0;color:#99938a;font-size:12px;line-height:1.7;white-space:pre-wrap}.xb-email{display:inline-flex;align-items:center;justify-content:center;min-width:190px;padding:10px 13px;border-radius:9px;background:#fff8f1;border:1px solid #f0d5bf;color:#d36e3a;font-size:12px;font-weight:800;word-break:break-all}.xb-footer{margin-top:34px;padding-top:22px;border-top:1px solid #e6e1d8;display:flex;justify-content:space-between;gap:18px;color:#aaa49a;font-size:11px}
+.xb-modal-mask{position:fixed;inset:0;z-index:2000;padding:16px;background:rgba(38,34,28,.48);backdrop-filter:blur(5px);display:grid;place-items:center}.xb-modal{width:min(720px,100%);max-height:min(88vh,760px);overflow:auto;border-radius:19px;background:#fffdf9;box-shadow:0 28px 90px rgba(27,21,13,.25)}.xb-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:23px 24px 17px;border-bottom:1px solid #ece7df}.xb-modal-head small{display:block;color:#d1723f;font-size:11px;font-weight:900;margin-bottom:7px}.xb-modal-head h2{margin:0;color:#34362f;font-size:24px}.xb-close{width:34px;height:34px;border:1px solid #e3ddd4;border-radius:9px;background:#fff;color:#77736b;font-size:20px;line-height:1}.xb-modal-body{padding:21px 24px}.xb-modal-desc{margin:0;color:#6f7068;white-space:pre-wrap;line-height:1.85;font-size:14px}.xb-modal-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.xb-modal-meta span{padding:10px 11px;border-radius:9px;background:#f5f2ec;color:#8f8b83;font-size:11px}.xb-modal-actions{display:flex;flex-wrap:wrap;gap:9px}.xb-modal-actions a,.xb-modal-actions button{display:inline-flex;align-items:center;justify-content:center;border-radius:9px;padding:10px 14px;border:1px solid #ddd7ce;background:#fff;color:#5a5b53;font-size:12px;font-weight:800;cursor:pointer}.xb-modal-actions .primary{border-color:#d46f3b;background:#d8733d;color:#fff}.xb-preview{display:none;margin-top:18px;border:1px solid #e7e1d8;border-radius:11px;overflow:hidden;height:420px}.xb-preview iframe{width:100%;height:100%;border:0;background:#f5f3ef}
+@media(max-width:1050px){.xb-main{padding-left:34px;padding-right:34px}.xb-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.xb-shell{display:block}.xb-sidebar{width:auto;min-height:auto;position:static;padding:16px;border-right:0;border-bottom:1px solid #e6e1d8}.xb-nav-label{margin:20px 4px 9px}.xb-nav{flex-direction:row;overflow-x:auto;padding-bottom:2px}.xb-nav-item{width:auto;min-width:max-content;padding:9px 11px}.xb-side-bottom{display:none}.xb-main{padding:0 16px 38px}.xb-header{display:none}.xb-heading{padding:28px 0 14px}.xb-feature{grid-template-columns:1fr;min-height:0;padding:24px 22px}.xb-feature-art{display:none}.xb-toolbar{align-items:stretch;flex-direction:column;gap:12px}.xb-search{width:100%}.xb-typebar{flex-direction:column;gap:4px}.xb-grid{grid-template-columns:1fr}.xb-submission{align-items:stretch;flex-direction:column}.xb-email{width:100%}.xb-footer{flex-direction:column;gap:7px}.xb-modal-meta{grid-template-columns:1fr 1fr}.xb-modal-head,.xb-modal-body{padding-left:18px;padding-right:18px}}
+
 `;
 
 const homeHtml = `<!doctype html>
@@ -484,205 +507,91 @@ const homeHtml = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>人民邮电出版社工具包</title>
+<title>AI漫剧资料库</title>
 <style>${css}</style>
 </head>
-<body class="home-page">
-<div class="home-wrap">
-  <nav class="home-nav">
-    <div class="home-brand"><span class="home-brand-mark">邮</span>人民邮电出版社工具包</div>
-    <a class="home-admin-link" href="/admin.html">管理员入口</a>
-  </nav>
-
-  <header class="home-hero">
-    <div>
-      <span class="home-kicker">人民邮电出版社 · AI学习配套资源</span>
-      <h1>资料、工具与课程配套资源，一站获取</h1>
-      <p>集中管理课程文档、模板、工具入口与更新资源。支持大文件下载、工具直达、资料检索与在线预览。</p>
-      <div class="home-search">
-        <input id="q" placeholder="搜索资料名称、简介或分类">
-        <select id="cat"><option value="">全部分类</option></select>
-      </div>
+<body class="xiaobei-page">
+<div class="xb-shell">
+  <aside class="xb-sidebar">
+    <a class="xb-brand" href="/">
+      <span class="xb-brandmark">书</span>
+      <span class="xb-brandtext">AI漫剧资料库<small>创作 · 学习 · 分享</small></span>
+    </a>
+    <div class="xb-nav-label">资料导航</div>
+    <nav id="xbNav" class="xb-nav" aria-label="资料分类"></nav>
+    <div class="xb-side-bottom">
+      <span>✳</span>
+      <p>愿热爱，有回响。</p>
+      <a class="xb-admin" href="/admin.html">⚙　站长后台</a>
     </div>
-    <div class="hero-side">
-      <strong>资源中心</strong>
-      <div class="big" id="heroCount">0 份资料</div>
-      <div class="small" id="heroSub">文件与工具统一管理，持续更新课程配套内容。</div>
-    </div>
-  </header>
+  </aside>
 
-  <div class="front-notice-row">
-    <section id="announcementBox" class="notice-board hidden">
-      <div class="notice-title">📌 <span id="announcementTitle">置顶公告</span></div>
-      <div id="announcementContent" class="notice-content"></div>
-    </section>
+  <div class="xb-main">
+    <header class="xb-header">
+      <span class="xb-breadcrumb">创作空间　/　<b>资料库</b></span>
+      <button class="xb-guide" type="button" onclick="document.getElementById('xbIntro').scrollIntoView({behavior:'smooth'})">使用指南</button>
+    </header>
 
-    <section id="submissionBox" class="submission-box hidden">
-      <div>
-        <h3 id="submissionTitle">投稿邮箱</h3>
-        <p id="submissionContent"></p>
-      </div>
-      <a id="submissionEmail" class="email-link" href="#"></a>
-    </section>
+    <main>
+      <section class="xb-heading">
+        <div class="xb-eyebrow">你的创作工具箱</div>
+        <div class="xb-title-row">
+          <h1>创作资料库<span>.</span></h1>
+          <span class="xb-free">公开分享 · 自由学习</span>
+        </div>
+        <p id="xbIntro" class="xb-intro">提示词、工具、Skill，都在这里整理。找到需要的资料，打开详情即可阅读、下载或直达工具。</p>
+      </section>
+
+      <section id="xbFeature" class="xb-feature">
+        <div class="xb-feature-copy"><span class="xb-feature-label">推荐资料 <span>/</span> 工具</span><h2>正在加载资料</h2><p>精选创作资源会显示在这里</p><button class="xb-feature-button" type="button">查看资料　→</button></div>
+        <div class="xb-feature-art"><strong>⌁</strong><small>从资料，到作品</small></div>
+      </section>
+
+      <section id="xbNotice" class="xb-notice" hidden><strong>📌 <span id="xbNoticeTitle">置顶公告</span></strong><p id="xbNoticeContent"></p></section>
+
+      <section class="xb-library">
+        <div class="xb-toolbar">
+          <div class="xb-list-heading"><h2>全部资料</h2><span id="xbCount">0 份</span></div>
+          <label class="xb-search" aria-label="搜索资料">⌕<input id="q" type="search" placeholder="搜索资料、关键词…"></label>
+        </div>
+        <div class="xb-typebar"><span>在线阅读 · 附件下载 · 工具直达</span><span>点击资料查看详细内容</span></div>
+        <div id="grid" class="xb-grid"></div>
+      </section>
+
+      <section id="xbSubmission" class="xb-submission" hidden>
+        <div><h3 id="xbSubmissionTitle">投稿邮箱</h3><p id="xbSubmissionContent"></p></div>
+        <a id="xbSubmissionEmail" class="xb-email" href="#"></a>
+      </section>
+    </main>
+
+    <footer class="xb-footer"><span>AI漫剧资料库</span><span>提示词 · 工具 · Skill · 持续更新</span></footer>
   </div>
-
-  <section id="recommendedSection" class="front-section hidden">
-    <div class="front-section-head">
-      <div>
-        <h2>推荐资源</h2>
-        <p>后台标记为推荐的重点资料与工具</p>
-      </div>
-    </div>
-    <div class="recommended-shell">
-      <div id="recommendedGrid" class="resource-grid"></div>
-    </div>
-  </section>
-
-  <section class="front-section">
-    <div class="front-section-head">
-      <div>
-        <h2>全部资料与工具</h2>
-        <p>支持搜索、分类筛选、下载与在线预览</p>
-      </div>
-      <span id="count" class="notice"></span>
-    </div>
-    <main class="resource-grid" id="grid"></main>
-  </section>
-
-  <footer class="home-footer">
-    <span>人民邮电出版社工具包</span>
-    <span>课程资料 · 工具资源 · 持续更新</span>
-  </footer>
 </div>
 
-<div id="previewMask" class="preview-mask hidden">
-  <div class="preview-dialog">
-    <div class="preview-head">
-      <strong id="previewTitle">在线预览</strong>
-      <button id="previewClose" class="close-btn" type="button">×</button>
-    </div>
-    <iframe id="previewFrame" class="preview-frame" title="在线预览"></iframe>
-  </div>
+<div id="detailMask" class="xb-modal-mask" hidden>
+  <section class="xb-modal" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <div class="xb-modal-head"><div><small id="detailCategory">资料</small><h2 id="detailTitle">资料详情</h2></div><button id="detailClose" class="xb-close" type="button" aria-label="关闭">×</button></div>
+    <div class="xb-modal-body"><p id="detailDesc" class="xb-modal-desc"></p><div id="detailMeta" class="xb-modal-meta"></div><div id="detailActions" class="xb-modal-actions"></div><div id="detailPreview" class="xb-preview"><iframe title="在线预览"></iframe></div></div>
+  </section>
 </div>
 
 <script>
 let docs=[];
+let activeCategory="";
 const E=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-function sz(b=0){
-  if(!b)return "—";
-  return b<1024?b+" B":b<1048576?(b/1024).toFixed(1)+" KB":b<1073741824?(b/1048576).toFixed(1)+" MB":(b/1073741824).toFixed(2)+" GB";
-}
-function dt(v){
-  if(!v)return "—";
-  const d=new Date(v);
-  if(Number.isNaN(d.getTime()))return "—";
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-function canPreview(d){
-  if(d.kind==="link")return false;
-  const t=String(d.type||"").toUpperCase();
-  return t==="PDF"||t==="TXT";
-}
-function card(d){
-  const badges=
-    (d.pinned?'<span class="resource-badge pin">置顶</span>':'')+
-    (d.recommended?'<span class="resource-badge rec">推荐</span>':'')+
-    (d.kind==="link"?'<span class="resource-badge link">直达链接</span>':'')+
-    '<span class="resource-badge">'+E(d.category||"其他资料")+'</span>';
-
-  const action=d.kind==="link"
-    ? '<a class="btn" target="_blank" rel="noopener noreferrer" href="/go/'+encodeURIComponent(d.id)+'">立即使用</a>'
-    : '<a class="btn" href="/download/'+encodeURIComponent(d.id)+'">下载资料</a>';
-
-  const preview=canPreview(d)
-    ? '<button class="preview-btn" onclick="openPreview(\\''+d.id+'\\',\\''+E(d.title).replace(/'/g,"&#39;")+'\\')">在线预览</button>'
-    : '';
-
-  return '<article class="resource-card">'+
-    '<div class="resource-top"><div class="resource-icon">'+(d.kind==="link"?"LINK":E(d.type||"FILE"))+'</div><div class="resource-badges">'+badges+'</div></div>'+
-    '<h3>'+E(d.title)+'</h3>'+
-    '<div class="resource-desc">'+E(d.description||"暂无简介")+'</div>'+
-    '<div class="resource-meta">'+
-      '<span>版本 '+E(d.version||"V1.0")+'</span>'+
-      '<span>更新 '+dt(d.updatedAt||d.createdAt)+'</span>'+
-      '<span>'+(d.kind==="link"?"访问":"下载")+' '+Number(d.downloads||0)+' 次</span>'+
-      '<span>'+(d.kind==="link"?"外部工具":sz(d.size))+'</span>'+
-    '</div>'+
-    '<div class="resource-actions">'+preview+action+'</div>'+
-  '</article>';
-}
-function filtered(){
-  const q=document.getElementById("q").value.toLowerCase().trim();
-  const c=document.getElementById("cat").value;
-  return docs.filter(d=>
-    (!q||((String(d.title||"")+" "+String(d.description||"")+" "+String(d.category||"")+" "+String(d.version||"")).toLowerCase().includes(q))) &&
-    (!c||d.category===c)
-  );
-}
-function render(){
-  const arr=filtered();
-  document.getElementById("count").textContent="共 "+arr.length+" 项";
-  document.getElementById("grid").innerHTML=arr.length?arr.map(card).join(""):'<div class="empty">没有找到符合条件的资料</div>';
-
-  const rec=docs.filter(d=>d.recommended);
-  const rs=document.getElementById("recommendedSection");
-  if(rec.length){
-    document.getElementById("recommendedGrid").innerHTML=rec.slice(0,6).map(card).join("");
-    rs.classList.remove("hidden");
-  }else{
-    rs.classList.add("hidden");
-  }
-}
-window.openPreview=(id,title)=>{
-  document.getElementById("previewTitle").textContent=title||"在线预览";
-  document.getElementById("previewFrame").src="/preview/"+encodeURIComponent(id);
-  document.getElementById("previewMask").classList.remove("hidden");
-};
-function closePreview(){
-  document.getElementById("previewMask").classList.add("hidden");
-  document.getElementById("previewFrame").src="about:blank";
-}
-document.getElementById("previewClose").onclick=closePreview;
-document.getElementById("previewMask").addEventListener("click",e=>{if(e.target.id==="previewMask")closePreview()});
-
-fetch("/api/site-settings").then(r=>r.json()).then(s=>{
-  const a=s.announcement||{};
-  const ab=document.getElementById("announcementBox");
-  if(a.enabled && (a.title||a.content)){
-    document.getElementById("announcementTitle").textContent=a.title||"置顶公告";
-    document.getElementById("announcementContent").textContent=a.content||"";
-    ab.classList.remove("hidden");
-  }
-
-  const sub=s.submission||{};
-  const sb=document.getElementById("submissionBox");
-  if(sub.enabled && (sub.email||sub.content)){
-    document.getElementById("submissionTitle").textContent=sub.title||"投稿邮箱";
-    document.getElementById("submissionContent").textContent=sub.content||"";
-    const email=document.getElementById("submissionEmail");
-    if(sub.email){
-      email.textContent=sub.email;
-      email.href="mailto:"+encodeURIComponent(sub.email);
-    }else{
-      email.textContent="邮箱暂未设置";
-      email.removeAttribute("href");
-    }
-    sb.classList.remove("hidden");
-  }
-}).catch(()=>{});
-
-fetch("/api/documents").then(r=>r.json()).then(x=>{
-  docs=x;
-  document.getElementById("heroCount").textContent=docs.length+" 项资源";
-  const fileCount=docs.filter(d=>d.kind!=="link").length;
-  const linkCount=docs.filter(d=>d.kind==="link").length;
-  document.getElementById("heroSub").textContent="文件 "+fileCount+" 项 · 工具链接 "+linkCount+" 项 · 持续更新";
-  const cs=[...new Set(docs.map(d=>d.category).filter(Boolean))];
-  document.getElementById("cat").innerHTML='<option value="">全部分类</option>'+cs.map(c=>'<option>'+E(c)+'</option>').join("");
-  render();
-});
-document.getElementById("q").oninput=render;
-document.getElementById("cat").onchange=render;
+function escId(v){return encodeURIComponent(String(v||""));}
+function sizeText(b){if(!b)return "在线资料";if(b<1024)return b+" B";if(b<1048576)return (b/1024).toFixed(1)+" KB";if(b<1073741824)return (b/1048576).toFixed(1)+" MB";return (b/1073741824).toFixed(2)+" GB";}
+function dateText(v){if(!v)return "—";const d=new Date(v);return Number.isNaN(d.getTime())?"—":d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function colorFor(d){const s=String(d.category||d.type||"");if(s.includes("工具")||d.kind==="link")return "orange";if(s.includes("Skill"))return "purple";if(s.includes("角色")||s.includes("场景"))return "green";return "blue";}
+function filtered(){const q=document.getElementById("q").value.toLowerCase().trim();return docs.filter(d=>(!activeCategory||d.category===activeCategory)&&(!q||(String(d.title||"")+" "+String(d.description||"")+" "+String(d.category||"")+" "+String(d.version||"")).toLowerCase().includes(q)));}
+function renderNav(){const counts={};docs.forEach(d=>{if(d.category)counts[d.category]=(counts[d.category]||0)+1;});const cats=Object.keys(counts);const all='<button class="xb-nav-item '+(activeCategory?"":"active")+'" data-category=""><span class="xb-nav-icon">▦</span><span>全部资料</span><small>'+docs.length+'</small></button>';document.getElementById("xbNav").innerHTML=all+cats.map(c=>'<button class="xb-nav-item '+(activeCategory===c?"active":"")+'" data-category="'+E(c)+'"><span class="xb-nav-icon">□</span><span>'+E(c)+'</span><small>'+counts[c]+'</small></button>').join("");document.querySelectorAll("#xbNav [data-category]").forEach(b=>b.onclick=()=>{activeCategory=b.dataset.category||"";renderNav();render();});}
+function card(d){const link=escId(d.id);const kind=d.kind==="link"?"在线工具":(d.type||"学习资料");const direct=d.kind==="link"?'<a class="xb-direct" href="/go/'+link+'" target="_blank" rel="noopener noreferrer">直达链接　↗</a>':"";return '<article class="xb-card"><button class="xb-cover '+colorFor(d)+'" data-open-id="'+E(d.id)+'" type="button"><span class="xb-cover-top"><span class="xb-cover-icon">'+(d.kind==="link"?"↗":"▤")+'</span><span>'+E(kind)+'</span></span><strong>'+E(d.title||"未命名资料")+'</strong><small>'+E(d.category||"其他资料")+'</small><span class="xb-cover-corner">↗</span></button><div class="xb-card-body"><span class="xb-category">'+E(d.category||"其他资料")+'</span><h3><button data-open-id="'+E(d.id)+'" type="button">'+E(d.title||"未命名资料")+'</button></h3><p class="xb-desc">'+E(d.description||"暂无简介")+'</p><div class="xb-card-bottom"><span>'+E(d.kind==="link"?"在线工具":sizeText(d.size))+'</span><div class="xb-card-actions">'+direct+'<button data-open-id="'+E(d.id)+'" type="button">查看资料　→</button></div></div></div></article>';}
+function render(){const arr=filtered();document.getElementById("xbCount").textContent=arr.length+" 份";document.getElementById("grid").innerHTML=arr.length?arr.map(card).join(""):'<div class="xb-empty">没有找到符合条件的资料</div>';document.querySelectorAll("[data-open-id]").forEach(el=>el.onclick=()=>openDetail(el.dataset.openId));}
+function renderFeature(){const d=docs.find(x=>x.recommended)||docs[0];const box=document.getElementById("xbFeature");if(!d){box.hidden=true;return;}box.hidden=false;box.querySelector("h2").textContent=d.title||"推荐资料";box.querySelector("p").textContent=d.description||"打开查看资料详情";box.querySelector(".xb-feature-label").innerHTML="推荐资料 <span>/</span> "+E(d.category||"资源");box.querySelector("button").onclick=()=>openDetail(d.id);}
+function openDetail(id){const d=docs.find(x=>x.id===id);if(!d)return;document.getElementById("detailCategory").textContent=d.category||"其他资料";document.getElementById("detailTitle").textContent=d.title||"资料详情";document.getElementById("detailDesc").textContent=d.description||"暂无简介";document.getElementById("detailMeta").innerHTML='<span>类型：'+E(d.kind==="link"?"直达链接":(d.type||"资料"))+'</span><span>更新：'+dateText(d.updatedAt||d.createdAt)+'</span><span>'+E(d.kind==="link"?"访问次数：":"文件大小：")+E(d.kind==="link"?Number(d.downloads||0):sizeText(d.size))+'</span>';let actions=d.kind==="link"?'<a class="primary" href="/go/'+escId(d.id)+'" target="_blank" rel="noopener noreferrer">打开直达链接　↗</a>':'<a class="primary" href="/download/'+escId(d.id)+'">下载资料　↓</a>';if(d.kind!=="link"&&["PDF","TXT"].includes(String(d.type||"").toUpperCase()))actions+='<button id="previewButton" type="button">在线预览</button>';document.getElementById("detailActions").innerHTML=actions;const pre=document.getElementById("detailPreview");pre.style.display="none";pre.querySelector("iframe").src="about:blank";const pb=document.getElementById("previewButton");if(pb)pb.onclick=()=>{pre.style.display="block";pre.querySelector("iframe").src="/preview/"+escId(d.id);};document.getElementById("detailMask").hidden=false;}
+function closeDetail(){document.getElementById("detailMask").hidden=true;document.getElementById("detailPreview").style.display="none";document.getElementById("detailPreview").querySelector("iframe").src="about:blank";}
+document.getElementById("detailClose").onclick=closeDetail;document.getElementById("detailMask").onclick=e=>{if(e.target.id==="detailMask")closeDetail();};document.addEventListener("keydown",e=>{if(e.key==="Escape")closeDetail();});document.getElementById("q").oninput=render;
+Promise.all([fetch("/api/documents").then(r=>r.json()),fetch("/api/site-settings").then(r=>r.json()).catch(()=>({}))]).then(([items,settings])=>{docs=Array.isArray(items)?items:[];renderNav();renderFeature();render();const a=settings.announcement||{};if(a.enabled&&(a.title||a.content)){document.getElementById("xbNotice").hidden=false;document.getElementById("xbNoticeTitle").textContent=a.title||"置顶公告";document.getElementById("xbNoticeContent").textContent=a.content||"";}const sub=settings.submission||{};if(sub.enabled&&(sub.email||sub.content)){document.getElementById("xbSubmission").hidden=false;document.getElementById("xbSubmissionTitle").textContent=sub.title||"投稿邮箱";document.getElementById("xbSubmissionContent").textContent=sub.content||"";const ael=document.getElementById("xbSubmissionEmail");if(sub.email){ael.textContent=sub.email;ael.href="mailto:"+encodeURIComponent(sub.email);}else{ael.textContent="邮箱暂未设置";ael.removeAttribute("href");}}}).catch(()=>{document.getElementById("grid").innerHTML='<div class="xb-empty">资料加载失败，请刷新页面重试</div>';});
 </script>
 </body>
 </html>`;
@@ -692,14 +601,14 @@ const adminHtml = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>人民邮电出版社工具包｜资料管理后台</title>
+<title>AI漫剧资料库｜资料管理后台</title>
 <style>${css}</style>
 </head>
 <body>
 
 <div class="admin">
   <section id="login" class="panel login">
-    <div class="brand"><span class="logo">AI</span>人民邮电出版社工具包后台</div>
+    <div class="brand"><span class="logo">AI</span>AI漫剧资料库后台</div>
     <h1>管理员登录</h1>
     <p class="notice">登录后可以上传、编辑、隐藏或删除资料。</p>
     <form id="lf">
