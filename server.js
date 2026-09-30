@@ -145,7 +145,7 @@ function validHttpUrl(value) {
 
 const allowed = new Set([
   ".pdf",".doc",".docx",".ppt",".pptx",
-  ".xls",".xlsx",".zip",".rar",".7z",".txt"
+  ".xls",".xlsx",".zip",".rar",".7z",".txt",".md",".markdown"
 ]);
 
 const upload = multer({
@@ -701,7 +701,7 @@ function openDetail(id){
     actions='<a class="primary" href="/go/'+escId(d.id)+'" target="_blank" rel="noopener noreferrer">打开直达链接　↗</a>';
   }else{
     actions='<a class="primary" href="/download/'+escId(d.id)+'">下载资料　↓</a>';
-    if(["PDF","TXT"].includes(String(d.type||"").toUpperCase())){
+    if(["PDF","TXT","MD","MARKDOWN"].includes(String(d.type||"").toUpperCase())){
       actions+='<button id="previewButton" type="button">在线预览</button>';
     }
   }
@@ -918,7 +918,7 @@ const adminHtml = `<!doctype html>
         <div class="full">
           <label>选择文件</label>
           <input name="file" type="file" required>
-          <p class="notice">支持 PDF、Word、PPT、Excel、ZIP/RAR/7Z、TXT，单文件最大 ${MAX_UPLOAD_MB}MB。大文件直接上传到 Bucket，不经过网站服务器。</p>
+          <p class="notice">支持 PDF、Word、PPT、Excel、ZIP/RAR/7Z、TXT、MD/Markdown，单文件最大 ${MAX_UPLOAD_MB}MB。大文件直接上传到 Bucket，不经过网站服务器。</p>
         </div>
         <div class="full">
           <button class="btn">上传并发布</button>
@@ -1803,6 +1803,175 @@ app.get("/go/:id",(req,res)=>{
   res.redirect(url);
 });
 
+
+async function streamToUtf8(body){
+  if(!body) return "";
+  if(typeof body.transformToString==="function"){
+    return body.transformToString("utf-8");
+  }
+  const chunks=[];
+  for await (const chunk of body){
+    chunks.push(Buffer.isBuffer(chunk)?chunk:Buffer.from(chunk));
+  }
+  return Buffer.concat(chunks).toString("utf8");
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#39;");
+}
+
+function renderInlineMarkdown(line){
+  let s=escapeHtml(line);
+
+  // 行内代码先占位，避免后续强调语法影响 code 内容。
+  const codeParts=[];
+  s=s.replace(/`([^`]+)`/g,(_,code)=>{
+    const token=`@@CODE_${codeParts.length}@@`;
+    codeParts.push(`<code>${code}</code>`);
+    return token;
+  });
+
+  s=s
+    .replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>")
+    .replace(/__([^_]+)__/g,"<strong>$1</strong>")
+    .replace(/\*([^*]+)\*/g,"<em>$1</em>")
+    .replace(/_([^_]+)_/g,"<em>$1</em>")
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+  codeParts.forEach((html,i)=>{
+    s=s.replace(`@@CODE_${i}@@`,html);
+  });
+  return s;
+}
+
+function markdownToSafeHtml(markdown){
+  const lines=String(markdown||"").replace(/\r\n?/g,"\n").split("\n");
+  const out=[];
+  let inCode=false;
+  let code=[];
+  let inUl=false;
+  let inOl=false;
+  let inQuote=false;
+
+  const closeLists=()=>{
+    if(inUl){out.push("</ul>");inUl=false;}
+    if(inOl){out.push("</ol>");inOl=false;}
+  };
+  const closeQuote=()=>{
+    if(inQuote){out.push("</blockquote>");inQuote=false;}
+  };
+
+  for(const raw of lines){
+    const line=raw.replace(/\t/g,"    ");
+
+    if(/^```/.test(line.trim())){
+      closeLists();closeQuote();
+      if(!inCode){
+        inCode=true;code=[];
+      }else{
+        out.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+        inCode=false;code=[];
+      }
+      continue;
+    }
+
+    if(inCode){
+      code.push(line);
+      continue;
+    }
+
+    if(!line.trim()){
+      closeLists();closeQuote();
+      continue;
+    }
+
+    const h=line.match(/^(#{1,6})\s+(.+)$/);
+    if(h){
+      closeLists();closeQuote();
+      const level=h[1].length;
+      out.push(`<h${level}>${renderInlineMarkdown(h[2])}</h${level}>`);
+      continue;
+    }
+
+    if(/^([-*_])(?:\s*\1){2,}\s*$/.test(line.trim())){
+      closeLists();closeQuote();out.push("<hr>");continue;
+    }
+
+    const ul=line.match(/^\s*[-*+]\s+(.+)$/);
+    if(ul){
+      closeQuote();
+      if(inOl){out.push("</ol>");inOl=false;}
+      if(!inUl){out.push("<ul>");inUl=true;}
+      out.push(`<li>${renderInlineMarkdown(ul[1])}</li>`);
+      continue;
+    }
+
+    const ol=line.match(/^\s*\d+[.)]\s+(.+)$/);
+    if(ol){
+      closeQuote();
+      if(inUl){out.push("</ul>");inUl=false;}
+      if(!inOl){out.push("<ol>");inOl=true;}
+      out.push(`<li>${renderInlineMarkdown(ol[1])}</li>`);
+      continue;
+    }
+
+    const quote=line.match(/^\s*>\s?(.*)$/);
+    if(quote){
+      closeLists();
+      if(!inQuote){out.push("<blockquote>");inQuote=true;}
+      out.push(`<p>${renderInlineMarkdown(quote[1])}</p>`);
+      continue;
+    }
+
+    closeLists();closeQuote();
+    out.push(`<p>${renderInlineMarkdown(line)}</p>`);
+  }
+
+  if(inCode){
+    out.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+  }
+  closeLists();closeQuote();
+  return out.join("\n");
+}
+
+function renderMarkdownPage(markdown,title){
+  const body=markdownToSafeHtml(markdown);
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escapeHtml(title)}</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:#fbfaf7;color:#34362f;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+article{width:min(920px,calc(100% - 34px));margin:0 auto;padding:34px 0 64px;line-height:1.82;font-size:15px}
+h1,h2,h3,h4,h5,h6{line-height:1.35;margin:1.45em 0 .65em;color:#252720}
+h1{font-size:30px;border-bottom:1px solid #e9e3d9;padding-bottom:12px}
+h2{font-size:24px;border-bottom:1px solid #eee8df;padding-bottom:9px}
+h3{font-size:20px}
+p{margin:.85em 0}
+ul,ol{padding-left:1.6em}
+li{margin:.38em 0}
+blockquote{margin:1.1em 0;padding:8px 16px;border-left:4px solid #d8733d;background:#fff7f1;color:#6e6259;border-radius:0 8px 8px 0}
+pre{overflow:auto;padding:16px;border-radius:10px;background:#272822;color:#f8f8f2;line-height:1.65}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#f1ede7;border-radius:5px;padding:2px 5px}
+pre code{background:transparent;padding:0}
+a{color:#c45d2c;text-decoration:none;border-bottom:1px solid rgba(196,93,44,.28)}
+hr{border:0;border-top:1px solid #e6dfd5;margin:28px 0}
+strong{color:#272922}
+</style>
+</head>
+<body><article>${body}</article></body>
+</html>`;
+}
+
 app.get("/preview/:id",async(req,res)=>{
   const docs=readDocs();
   const d=docs.find(x=>x.id===req.params.id && x.visible!==false && x.kind!=="link");
@@ -1810,30 +1979,50 @@ app.get("/preview/:id",async(req,res)=>{
   if(!d) return res.status(404).send("文件不存在");
 
   const type=String(d.type||"").toUpperCase();
-  if(type!=="PDF" && type!=="TXT"){
+  const isPdf=type==="PDF";
+  const isText=type==="TXT";
+  const isMarkdown=type==="MD" || type==="MARKDOWN";
+
+  if(!isPdf && !isText && !isMarkdown){
     return res.status(415).send("该文件类型暂不支持在线预览");
   }
-
-  const contentType=type==="PDF"?"application/pdf":"text/plain; charset=utf-8";
 
   try{
     if(d.storage==="bucket" && d.objectKey){
       if(!BUCKET_READY) return res.status(503).send("Bucket 尚未连接");
 
-      const command=new GetObjectCommand({
-        Bucket:BUCKET_NAME,
-        Key:d.objectKey,
-        ResponseContentDisposition:"inline",
-        ResponseContentType:contentType
-      });
+      // PDF / TXT 直接走对象存储的 inline 预览；
+      // Markdown 需要读取文本后转成安全 HTML，因此由服务器代理读取。
+      if(!isMarkdown){
+        const contentType=isPdf?"application/pdf":"text/plain; charset=utf-8";
+        const command=new GetObjectCommand({
+          Bucket:BUCKET_NAME,
+          Key:d.objectKey,
+          ResponseContentDisposition:"inline",
+          ResponseContentType:contentType
+        });
 
-      const url=await getSignedUrl(s3,command,{expiresIn:900});
-      return res.redirect(url);
+        const url=await getSignedUrl(s3,command,{expiresIn:900});
+        return res.redirect(url);
+      }
+
+      const obj=await s3.send(new GetObjectCommand({
+        Bucket:BUCKET_NAME,
+        Key:d.objectKey
+      }));
+      const markdown=await streamToUtf8(obj.Body);
+      return res.type("html").send(renderMarkdownPage(markdown,d.title||d.originalName||"Markdown 预览"));
     }
 
     const f=path.join(UPLOAD_DIR,d.storedName||"");
     if(!d.storedName || !fs.existsSync(f)) return res.status(404).send("文件已丢失");
 
+    if(isMarkdown){
+      const markdown=fs.readFileSync(f,"utf8");
+      return res.type("html").send(renderMarkdownPage(markdown,d.title||d.originalName||"Markdown 预览"));
+    }
+
+    const contentType=isPdf?"application/pdf":"text/plain; charset=utf-8";
     res.setHeader("Content-Type",contentType);
     res.setHeader("Content-Disposition","inline");
     return res.sendFile(f);
